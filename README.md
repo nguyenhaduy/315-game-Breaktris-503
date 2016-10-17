@@ -1,4 +1,4 @@
-# 315-game-Bricktrix-503
+# 315-game-Breaktris-503
 Project 2 for CSCE 315 - Game making
 
 Group Member
