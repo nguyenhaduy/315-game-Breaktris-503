@@ -1,7 +1,7 @@
 # 315-game-Breaktris-503
 <h1>Project 2 for CSCE 315 - Game making</h1>
 
-<b>Group Member</>
+<b>Group Member</b>
 
 1. Wesley Ng
 2. Duy Nguyen
