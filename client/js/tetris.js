@@ -38,9 +38,9 @@ TetrisPlayer = function(index, game){
 	this.blockRotate = blockRotate;
 	this.blockInvis = blockInvis;
 	this.imgLoader = imgLoader;
-	imgLoader.addImage("client/blocks.png", "blocks");
-	imgLoader.addImage("client/bg.png", "bg");
-	imgLoader.addImage("client/over.png", "gameover");
+	imgLoader.addImage("client/img/blocks.png", "blocks");
+	imgLoader.addImage("client/img/bg.png", "bg");
+	imgLoader.addImage("client/img/over.png", "gameover");
 	this.curPiece = getRandomPiece();
 	this.gameData;
 	this.isGameOver = false;
@@ -76,9 +76,9 @@ var setEventHandlers = function () {
 function onReady()
 {
 	imgLoader = new BulkImageLoader();
-	imgLoader.addImage("client/blocks.png", "blocks");
-	imgLoader.addImage("client/bg.png", "bg");
-	imgLoader.addImage("client/over.png", "gameover");
+	imgLoader.addImage("client/img/blocks.png", "blocks");
+	imgLoader.addImage("client/img/bg.png", "bg");
+	imgLoader.addImage("client/img/over.png", "gameover");
 	imgLoader.onReadyCallback = onImagesLoaded;
 	imgLoader.loadImages();
 
