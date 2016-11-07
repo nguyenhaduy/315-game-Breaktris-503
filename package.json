@@ -1,0 +1,13 @@
+{
+  "name": "breaktris",
+  "version": "1.0.0",
+  "description": "multiplay game between breakout and tetris",
+  "main": "server.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Duy Nguyen",
+  "license": "ISC"
+}
