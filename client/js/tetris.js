@@ -263,8 +263,10 @@ function update()
 		{
 			requestAnimationFrame(update);
 		}
-	else
+	else{
+		socket.emit('Tetrislose');
 		ctx.drawImage(gameOverImg, 0, 0, 320, 640, 0, 0, 320, 640);
+	}
 }
 
 function copyData(p)

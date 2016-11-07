@@ -12,7 +12,7 @@ window.onload = function(){
     var brickInfo;
     var scoreText;
     var score = 0;
-    var lives = 3;
+    var lives = 1;
     var livesText;
     var lifeLostText;
     var startButton;
@@ -24,6 +24,7 @@ window.onload = function(){
     var rightKey;
     var spaceKey;
     var BreakoutPlayer;
+	var gameover;
 
     var brickInfo = {
             width: 30,
@@ -100,6 +101,7 @@ window.onload = function(){
         game.load.image('paddle', 'client/img/paddle.png');
         game.load.image('brick', 'client/img/brick.png');
         game.load.spritesheet('button', 'client/img/button.png', 120, 40);
+		game.load.image('gameover','client/img/over.png')
     }
 
     function create() {        
@@ -134,16 +136,6 @@ window.onload = function(){
             paddle = player.paddle;
 
             initBrick();
-            // bricks = player.bricks;
-            // var len = bricks.children.length;
-            // var brickdata = [];
-            // for (var i = 0; i < bricks.children.length; i++) {
-            //     brickdata.push({x:bricks.children[i].x,y:bricks.children[i].y});
-            //     // brickdata[i].x = bricks.children[i].x;
-            //     // brickdata[i].y = bricks.children[i].y;
-            // }
-
-            // socket.emit('BricksUpdate', brickdata);
 
             textStyle = { font: '18px Arial', fill: '#0095DD' };
             scoreText = game.add.text(5, 5, 'Points: 0', textStyle);
@@ -155,6 +147,10 @@ window.onload = function(){
 
             startButton = game.add.button(game.world.width*0.5, game.world.height*0.5, 'button', startGame, this, 1, 0, 2);
             startButton.anchor.set(0.5);
+			
+			gameover = game.add.sprite(game.world.width*0.5, game.world.height*0.5, 'gameover');
+			gameover.anchor.set(0.5);
+			gameover.visible = false;
 
             cursors = player.cursors;
             upKey = player.upKey;
@@ -179,8 +175,6 @@ window.onload = function(){
                 var brickdata = [];
                 for (var i = 0; i < bricks.children.length; i++) {
                     brickdata.push({x:bricks.children[i].x,y:bricks.children[i].y});
-                    // brickdata[i].x = bricks.children[i].x;
-                    // brickdata[i].y = bricks.children[i].y;
                 }
                 socket.emit('BricksUpdate', brickdata);
 
@@ -192,22 +186,10 @@ window.onload = function(){
             ball.animations.add('wobble', [0,1,0,2,0,1,0,2,0], 24);
             ball.anchor.set(0.5);
 
-            // game.physics.enable(ball, Phaser.Physics.ARCADE);
-            // ball.body.velocity.set(150,-150);
-            // ball.body.collideWorldBounds = true;
-            // ball.body.bounce.set(1);
-            // ball.checkWorldBounds = true;
-            // ball.events.onOutOfBounds.add(ballLeaveScreen, this);
-
             paddle = game.add.sprite(game.world.width*0.5, game.world.height-5, 'paddle');
             paddle.anchor.set(0.5,1);
-            // game.physics.enable(paddle, Phaser.Physics.ARCADE);
-            // paddle.body.immovable = true;
-
-            // paddle = player.paddle;
 
             initBrick();
-            // bricks = player.bricks;
 
             textStyle = { font: '18px Arial', fill: '#0095DD' };
             scoreText = game.add.text(5, 5, 'Points: 0', textStyle);
@@ -447,8 +429,12 @@ window.onload = function(){
                 }, this);
             }
             else {
-                alert('You lost, game over!');
-                location.reload();
+				socket.emit('BreakoutLose');
+				gameover.visible = true;
+                //alert('You lost, game over!');
+				game.input.onDown.addOnce(function(){
+					location.reload();
+				}, this);
             }
         }
         else if (myID == 1){
