@@ -72,18 +72,21 @@ io.sockets.on('connection', function(socket){
     });
 
     socket.on('StartGame',function(data){
+    	console.log('Game Start');
         if(SOCKET_LIST[1]){
             SOCKET_LIST[1].emit('StartGame', data);
         }
     });
 
     socket.on('MakeInvi',function(){
+    	console.log('Current Tetris Piece is Invisible.');
         if(SOCKET_LIST[1]){
             SOCKET_LIST[1].emit('MakeInvi');
         }
     });
 	
 	socket.on('BreakoutLose',function(){
+		console.log('Breakout Player Lose. Tetris Player Win');
         if(SOCKET_LIST[1]){
             SOCKET_LIST[1].emit('BreakoutLose');
         }
@@ -115,6 +118,7 @@ io.sockets.on('connection', function(socket){
     });
 	
 	socket.on('TetrisLose',function(){
+		console.log('Tetris Player Lose. Breakout Player Win');
         if(SOCKET_LIST[0]){
             SOCKET_LIST[0].emit('TetrisLose');
         }
