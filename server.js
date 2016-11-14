@@ -27,17 +27,17 @@ var BrickData;
  
 var io = require('socket.io')(serv,{});
 io.sockets.on('connection', function(socket){
-	console.log('New player connected to socket server')
+	console.log('New player connected to socket server.')
     // socket.id = Math.random();
     if (player_id < 2){
 	    socket.id = player_id;
 	    if (socket.id == 0){
 	    	socket.emit('player ID', 0);
-	    	console.log('This player ' +socket.id + ' plays Breakout');
+	    	console.log('This player ' +socket.id + ' plays Breakout.');
 	    }
 	    else if (socket.id == 1){
 	    	socket.emit('player ID', 1);
-	    	console.log('This player ' +socket.id + ' plays Tetris');
+	    	console.log('This player ' +socket.id + ' plays Tetris.');
 	    }
 	    SOCKET_LIST[socket.id] = socket;
 	    player_id++;
@@ -72,7 +72,7 @@ io.sockets.on('connection', function(socket){
     });
 
     socket.on('StartGame',function(data){
-    	console.log('Game Start');
+    	console.log('Game Start.');
         if(SOCKET_LIST[1]){
             SOCKET_LIST[1].emit('StartGame', data);
         }
@@ -86,7 +86,7 @@ io.sockets.on('connection', function(socket){
     });
 	
 	socket.on('BreakoutLose',function(){
-		console.log('Breakout Player Lose. Tetris Player Win');
+		console.log('Breakout Player Lose. Tetris Player Win.');
         if(SOCKET_LIST[1]){
             SOCKET_LIST[1].emit('BreakoutLose');
         }
@@ -112,7 +112,7 @@ io.sockets.on('connection', function(socket){
 
     socket.on('AddBrickline',function(){
         if(SOCKET_LIST[0]){
-            console.log('Add Brick line')
+            console.log('Add Brick Line.')
             SOCKET_LIST[0].emit('AddBrickline');
         }
     });
@@ -126,7 +126,7 @@ io.sockets.on('connection', function(socket){
    
     //When a client disconnect
     socket.on('disconnect',function(){
-    	console.log('One player disconnected')
+    	console.log('One player disconnected.')
     	player_id = socket.id;
         delete SOCKET_LIST[socket.id];
         //Player.onDisconnect(socket);
