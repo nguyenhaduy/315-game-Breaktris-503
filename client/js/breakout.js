@@ -278,7 +278,7 @@ window.onload = function(){
     function startGame() {
         if (myID == 0){
             startButton.destroy();
-            ball.body.velocity.set(0, 450);        
+            ball.body.velocity.set(0, 150);        
             // ball.body.gravity.y = 100;
             playing = true;
             socket.emit('StartGame', playing);
@@ -357,13 +357,13 @@ window.onload = function(){
             {
                 //  Ball is on the left-hand side of the paddle
                 diff = paddle.x - ball.x;
-                ball.body.velocity.x = (-10 * diff);
+                ball.body.velocity.x = (-5 * diff);
             }
             else if (ball.x > paddle.x)
             {
                 //  Ball is on the right-hand side of the paddle
                 diff = ball.x -paddle.x;
-                ball.body.velocity.x = (10 * diff);
+                ball.body.velocity.x = (5 * diff);
             }
             else
             {
@@ -403,7 +403,7 @@ window.onload = function(){
             }
             
             ++bricksClear;
-            if (bricksClear == 15){
+            if (bricksClear == 5){
                 bricksClear = 0;
                 socket.emit('MakeInvi');
             }
