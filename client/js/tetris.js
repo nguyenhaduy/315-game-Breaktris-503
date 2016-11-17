@@ -6,17 +6,17 @@ var SIZE = 32;
 var canvas = document.getElementById('gameCanvas');
 var ctx = canvas.getContext('2d');
 var blockImg;
-var bgImg;
+var bgImg; //background image
 var gameOverImg;
-var curPiece;
-var gameData;
-var imgLoader;
+var curPiece;//Hold reference to the current game piece moving around
+var gameData; // 2 Dimensional array that represents the game board
+var imgLoader; // Bulk Image Loader
 var prevTime;
 var curTime;
 var isGameOver;
-var lineSpan;
-var curLines;
-var TetrisPlayer;
+var lineSpan; // Reference to span object in <div id = "score"> lines
+var curLines; // The number of lines that the player has
+var TetrisPlayer; // Will be used as an object
 var event;
 
 
@@ -76,7 +76,7 @@ var setEventHandlers = function () {
 function onReady()
 {
 	imgLoader = new BulkImageLoader();
-	imgLoader.addImage("client/img/blocks.png", "blocks");
+	imgLoader.addImage("client/img/blocks.png", "blocks"); // Loads all images that are going to be used
 	imgLoader.addImage("client/img/bg.png", "bg");
 	imgLoader.addImage("client/img/over.png", "gameover");
 	imgLoader.onReadyCallback = onImagesLoaded;
@@ -105,7 +105,7 @@ function getInput(e)
 
 		e.preventDefault();
 		
-		if(isGameOver != true)
+		if(isGameOver != true) // Checks the keys that are pressed and maps them to movement of the pieces
 		{
 			switch(e.keyCode)
 			{
@@ -182,7 +182,8 @@ function initGame()
 
 	ctx.drawImage(bgImg, 0, 0, 320, 640, 0, 0, 320, 640);
 	
-	if(gameData == undefined)
+	if(gameData == undefined) // This will loop through the game data array and set everything to zero 
+		//if the game doesn't exist
 	{
 		gameData = new Array();
 		
@@ -229,15 +230,18 @@ function update()
 		isGameOver = player.isGameOver;
 		if(curTime - prevTime > 200)
 		{
-			// update the game piece
+			//update the game piece
+			//Piece is falling down so we add one to y position, if it hit 
+			//something, then we copy the data into the game board and then get a new piece
 			if( checkMove(curPiece.gridx, curPiece.gridy + 1, curPiece.curState) )
 			{
-				curPiece.gridy += 1;
+				curPiece.gridy += 1;//check move will check if current piece can move down one
+
 			}
 			else
 			{
-				blockInvis = 0;
-				copyData(curPiece);
+				blockInvis = 0; // Set counter variable to 0 to make it visible
+				copyData(curPiece);//If it hits the bottom, we copy game data to our game board
 				player.curPiece = getRandomPiece();
 			}
 			
@@ -250,7 +254,9 @@ function update()
 		
 		ctx.clearRect(0, 0, 320, 640);
 		drawBoard();
-		drawPiece(curPiece);		
+		drawPiece(curPiece);	
+		//Takes in an image to draw, first four values define the 
+		//points of the source image. Last four is where you place on the canvas	
 
 	}
 	else if(myID == 0){
@@ -274,22 +280,23 @@ function copyData(p)
 	var xpos = p.gridx;
 	var ypos = p.gridy;
 	var state = p.curState;
+	//Loop through piece in current state and draw into board
 	// gameData = player.gameData;
 	isGameOver = player.isGameOver;
 	
 	for(var r = 0, len = p.states[state].length; r < len; r++)
-	{
+	{ // Takes care of rows
 		for(var c = 0, len2 = p.states[state][r].length; c < len2; c++)
-		{
+		{ // Check if current spot on piece is a one
 			if(p.states[state][r][c] == 1 && ypos >= 0)
 			{
-				gameData[ypos][xpos] = (p.color + 1);
+				gameData[ypos][xpos] = (p.color + 1); // If color is zero, then it's empty
 			}
 			
 			xpos += 1;
 		}
 		
-		xpos = p.gridx;
+		xpos = p.gridx; //Once done drawing a row of columns
 		ypos += 1;
 	}
 	
@@ -308,7 +315,7 @@ function checkLines()
 	var r = ROWS - 1;
 	var c = COLS - 1;
 	// gameData = player.gameData;
-	
+	//Loop backwards between the rows and the columns
 	while(r >= 0)
 	{
 		while(c >= 0)
@@ -316,9 +323,9 @@ function checkLines()
 			if(gameData[r][c] == 0)
 			{
 				fullRow = false;
-				c = -1;
+				c = -1; // We will then know that the row is false
 			}
-			c--;
+			c--; // Keep going through the row
 		}
 		
 		if(fullRow == true)
@@ -346,7 +353,7 @@ function checkLines()
 	}
 }
 
-function zeroRow(row)
+function zeroRow(row) // Copying the data from the row above down one
 {
 	var r = row;
 	var c = 0;
@@ -357,15 +364,15 @@ function zeroRow(row)
 		while(c < COLS)
 		{
 			if(r > 0)
-				gameData[r][c] = gameData[r-1][c];
+				gameData[r][c] = gameData[r-1][c]; // If there is a valid data we copy in
 			else
-				gameData[r][c] = 0;
+				gameData[r][c] = 0; // Else just make it zero
 				
 			c++;
 		}
 		
 		c = 0;
-		r--;
+		r--; // Go backwards, worry about the lines above and not the lines below
 	}
 }
 
@@ -373,7 +380,7 @@ function drawBoard()
 {
 	// gameData = player.gameData;
 	ctx.drawImage(bgImg, 0, 0, 320, 640, 0, 0, 320, 640);
-	
+	//Draw the individual cells
 	for(var r = 0; r < ROWS; r++)
 	{
 		for(var c = 0; c < COLS; c++)
@@ -381,6 +388,10 @@ function drawBoard()
 			if(gameData[r][c] != 0)
 			{
 				ctx.drawImage(blockImg, (gameData[r][c] - 1) * SIZE, 0, SIZE, SIZE, c * SIZE, r * SIZE, SIZE, SIZE);
+				//When the pieces hit the bottom of the board,
+				//we are going to copy the value of the pieces color into
+				//the game board. If the color is zero that is going
+				//to represent an empty space
 			}
 		}
 	}
@@ -391,12 +402,12 @@ function drawPiece(p)
 	var drawX = p.gridx;
 	var drawY = p.gridy;
 	var state = p.curState;
-	
+	//Loop through piece in current state and draw into board
 	if(blockInvis == 0){
 	for(var r = 0, len = p.states[state].length; r < len; r++)
-	{
+	{ // Takes care of the rows
 		for(var c = 0, len2 = p.states[state][r].length; c < len2; c++)
-		{
+		{ // Check if current spot on piece is a one
 			if(p.states[state][r][c] == 1 && drawY >= 0)
 			{
 				ctx.drawImage(blockImg, p.color * SIZE, 0, SIZE, SIZE, drawX * SIZE, drawY * SIZE, SIZE, SIZE);
@@ -405,7 +416,7 @@ function drawPiece(p)
 			drawX += 1;
 		}
 		
-		drawX = p.gridx;
+		drawX = p.gridx; //Once done drawing a row of columns
 		drawY += 1;
 	}
 
@@ -413,7 +424,7 @@ function drawPiece(p)
 }
 
 function checkMove(xpos, ypos, newState)
-{
+{ // Checking the position that we want to move the piece to. It's the position that you want to moove it to.
 	var result = true;
 	var newx = xpos;
 	var newy = ypos;
@@ -421,10 +432,10 @@ function checkMove(xpos, ypos, newState)
 	// gameData = player.gameData;
 	
 	for(var r = 0, len = curPiece.states[newState].length; r < len; r++)
-	{
+	{ // Check to see if it is in bounds that it isn't too far to the right or left
 		for(var c = 0, len2 = curPiece.states[newState][r].length; c < len2; c++)
 		{
-			if(newx < 0 || newx >= COLS)
+			if(newx < 0 || newx >= COLS) // If found an invalid move
 			{
 				result = false;
 				c = len2;
@@ -433,7 +444,9 @@ function checkMove(xpos, ypos, newState)
 			
 			if(gameData[newy] != undefined && gameData[newy][newx] != 0
 				&& curPiece.states[newState][r] != undefined && curPiece.states[newState][r][c] != 0)
-			{
+			{ // Checking if the position on the board isn't equal to zero.
+		//Need to check the data for the current piece to not be zero.
+		//If piece has actual data and game data is actually zero, then two pieces are hitting each other
 				result = false;
 				c = len2;
 				r = len;
@@ -446,7 +459,7 @@ function checkMove(xpos, ypos, newState)
 		newy += 1;
 		
 		if(newy > ROWS)
-		{
+		{//Check to make sure that piece doens't fall below gameboard
 			r = len;
 			result = false;
 		}
