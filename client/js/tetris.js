@@ -71,6 +71,11 @@ var setEventHandlers = function () {
             // console.log('Block Update');
             blockInvis = 1;
         })
+
+        socket.on('BreakoutLose', function(){
+            console.log('BreakoutLose');
+            isGameOver = true;
+        })
 }
 
 function onReady()
@@ -177,7 +182,7 @@ function initGame()
 	
 	var r, c;
 	curLines = 0;
-	isGameOver = player.isGameOver;
+	// isGameOver = player.isGameOver;
 	isGameOver = false;
 
 	ctx.drawImage(bgImg, 0, 0, 320, 640, 0, 0, 320, 640);
@@ -227,8 +232,8 @@ function update()
 	if (myID == 1 && playing == true){
 		curTime = new Date().getTime();
 		curPiece = player.curPiece;
-		isGameOver = player.isGameOver;
-		if(curTime - prevTime > 200)
+		// isGameOver = player.isGameOver;
+		if(curTime - prevTime > 500)
 		{
 			//update the game piece
 			//Piece is falling down so we add one to y position, if it hit 
@@ -265,12 +270,11 @@ function update()
 		drawPiece(curPiece);
 		// requestAnimationFrame(update);
 	}
-	if(isGameOver == false)
-		{
+	if(isGameOver == false) {
 			requestAnimationFrame(update);
 		}
-	else{
-		socket.emit('Tetrislose');
+	else if (isGameOver == true) {
+		socket.emit('TetrisLose');
 		ctx.drawImage(gameOverImg, 0, 0, 320, 640, 0, 0, 320, 640);
 	}
 }

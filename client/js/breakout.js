@@ -233,6 +233,14 @@ window.onload = function(){
             addBrickLine = 1;
             // addBricks();
         });
+
+        socket.on('TetrisLose', function(){
+            console.log('Tetris Lose');
+            gameover.visible = true;
+            game.input.onDown.addOnce(function(){
+                    location.reload();
+                }, this);
+        })
     }
 
     var flipFlop;
