@@ -3,7 +3,7 @@ var COLS = 10;
 var SIZE = 32;
 
 
-var canvas = document.getElementById('gameCanvas');
+var canvas = document.getElementById('tetris');
 var ctx = canvas.getContext('2d');
 var blockImg;
 var bgImg; //background image

@@ -1,13 +1,14 @@
 window.onload = function(){    
+    // Initialize phaser engine
     var game = new Phaser.Game(320, 640, Phaser.AUTO, 'breakout', {
       preload: preload, create: create, update: update
     });
 
     var breakout;
 
-    var ball;
-    var paddle;
-    var bricks;
+    var ball;   // Ball object
+    var paddle; // Paddle object
+    var bricks; // Bricks objects
     var newBrick;
     var brickInfo;
     var scoreText;
@@ -26,6 +27,7 @@ window.onload = function(){
     var BreakoutPlayer;
 	var gameover;
 
+    // Information to create brick
     var brickInfo = {
             width: 30,
             height: 15,
@@ -40,6 +42,7 @@ window.onload = function(){
             padding: 10
         };
 
+    //Checkout Player class
     BreakoutPlayer = function(index, game, player){
 
         this.ball = game.add.sprite(game.world.width*0.5, game.world.height*0.5, 'ball');
@@ -63,6 +66,7 @@ window.onload = function(){
         this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     }
 
+    // Update Breakout Player Function
     BreakoutPlayer.prototype.update = function() {
         var inputChanged = (
             this.cursor.left != this.input.left ||
@@ -92,6 +96,7 @@ window.onload = function(){
 
     }
     
+    // Loading data for the game
     function preload() {
         game.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
         game.scale.pageAlignHorizontally = true;
@@ -104,35 +109,31 @@ window.onload = function(){
 		game.load.image('gameover','client/img/over.png')
     }
 
+    //Creating game objects
     function create() {        
                        
-        onReady();
+        onReady();  // Calling onReady Tetris function
 
         console.log('ID is ' + myID);
-        if (myID == 0) {
+        if (myID == 0) {    // If the player play breakout
+            // Initialize phaser physics engine
             game.physics.startSystem(Phaser.Physics.ARCADE);
+
+            // Uncheck collision for the bottom screen
             game.physics.arcade.checkCollision.down = false;
             console.log('Playing');
 
+            // Create new player
             player = new BreakoutPlayer(myID, game, breakout);
 
+            // Create ball object and set its attributes
             ball = player.ball;
-            // ball = game.add.sprite(game.world.width*0.5, game.world.height*0.5, 'ball');
-            // ball.animations.add('wobble', [0,1,0,2,0,1,0,2,0], 24);
-            // ball.anchor.set(0.5);
-
-            // game.physics.enable(ball, Phaser.Physics.ARCADE);
-            // ball.body.velocity.set(150,-150);
             ball.body.collideWorldBounds = true;
             ball.body.bounce.set(1);
             ball.checkWorldBounds = true;
             ball.events.onOutOfBounds.add(ballLeaveScreen, this);
 
-            // paddle = game.add.sprite(game.world.width*0.5, game.world.height-5, 'paddle');
-            // paddle.anchor.set(0.5,1);
-            // game.physics.enable(paddle, Phaser.Physics.ARCADE);
-            // paddle.body.immovable = true;
-
+            // Create paddle object
             paddle = player.paddle;
 
             initBrick();
@@ -180,7 +181,7 @@ window.onload = function(){
 
             },1000/60);
         }
-        else if(myID ==1){
+        else if(myID ==1){  // If the player play tetris
             console.log('Watching');
             ball = game.add.sprite(game.world.width*0.5, game.world.height*0.5, 'ball');
             ball.animations.add('wobble', [0,1,0,2,0,1,0,2,0], 24);
@@ -201,9 +202,11 @@ window.onload = function(){
             
         }
 
+        // Start event handler
         setEventHandlers();
     }   
 
+    // Event Handler Function
     var setEventHandlers = function () {
 
         // Update Ball
@@ -223,11 +226,13 @@ window.onload = function(){
         // Update Bricks
         socket.on('BricksUpdate', copyBreak)
 
+        // Start game
         socket.on('StartGame', function(data){
             // console.log('Block Update');
             playing = data;
         })
 
+        // Add 1 more breakline
         socket.on('AddBrickline', function(){
             console.log('Add Brick line');
             addBrickLine = 1;
@@ -237,6 +242,7 @@ window.onload = function(){
         socket.on('TetrisLose', function(){
             console.log('Tetris Lose');
             gameover.visible = true;
+            playing = false;
             game.input.onDown.addOnce(function(){
                     location.reload();
                 }, this);
@@ -251,11 +257,11 @@ window.onload = function(){
             if(playing) {
                 if (rightKey.isDown){
                     if (paddle.x < 320)
-                        paddle.x = paddle.x + 8;
+                        paddle.x = paddle.x + 5;
                 }
                 if (leftKey.isDown){
                     if (paddle.x > 0)
-                        paddle.x = paddle.x - 8;
+                        paddle.x = paddle.x - 5;
                 }
                 
                 if (spaceKey.isDown){
