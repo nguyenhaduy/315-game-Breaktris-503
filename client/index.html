@@ -14,7 +14,17 @@
         var addBrickLine = 0;
         var bricksClear = 0;
         var lineClear = 0;
+        var WinImg;
+        var LoseImg;
+        var PlayButton;
+        var NewButton;
+        var JoinButton;
+        var IntroButton;
+        var TetrisBoard;
+        var BreakoutBoard;
+        var MainScreen;
     	socket = io();
+
         // Update ID
     	socket.on('player ID',function(data){
             window.myID = data;
@@ -40,6 +50,8 @@
             <script type="text/javascript" src="client/js/menu.js"></script>
             
         </div>
+
+        
         
     	<div id="TetrisBoard" style="display:none;">
             <canvas id="tetris" width="320" height="640"></canvas>
@@ -57,14 +69,18 @@
             <p>Lines: <span id="lines"></span></p>
         </div>
 
+        <img id="WinImg" src="client/img/WinGame.jpg" align="top" style="display:none;"></img>
+        <img id="LoseImg" src="client/img/LoseGame.jpg" align="top" style="display:none;"></img>
         <script type="text/javascript">
-                var PlayButton = document.getElementById('PlayButton');
-                var NewButton = document.getElementById('NewButton');
-                var JoinButton = document.getElementById('JoinButton');
-                var IntroButton = document.getElementById('PlayButton');
-                var TetrisBoard = document.getElementById('TetrisBoard');
-                var BreakoutBoard = document.getElementById('BreakoutBoard');
-                var MainScreen = document.getElementById('MainScreen');
+                WinImg = document.getElementById('WinImg');
+                LoseImg = document.getElementById('LoseImg');
+                PlayButton = document.getElementById('PlayButton');
+                NewButton = document.getElementById('NewButton');
+                JoinButton = document.getElementById('JoinButton');
+                IntroButton = document.getElementById('PlayButton');
+                TetrisBoard = document.getElementById('TetrisBoard');
+                BreakoutBoard = document.getElementById('BreakoutBoard');
+                MainScreen = document.getElementById('MainScreen');
                 PlayButton.onclick = function (){
                     MainScreen.style.display = 'none';
                     TetrisBoard.style.display = 'inline-block';

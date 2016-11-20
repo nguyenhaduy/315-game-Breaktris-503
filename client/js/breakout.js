@@ -242,7 +242,8 @@ window.onload = function(){
         socket.on('TetrisLose', function(){
             console.log('Tetris Lose');
             gameover.visible = true;
-            playing = false;
+            playing = false;            
+            WinImg.style.display = 'inline-block';
             game.input.onDown.addOnce(function(){
                     location.reload();
                 }, this);
@@ -445,6 +446,7 @@ window.onload = function(){
             else {
 				socket.emit('BreakoutLose');
 				gameover.visible = true;
+                LoseImg.style.display = 'inline-block';
                 //alert('You lost, game over!');
 				game.input.onDown.addOnce(function(){
 					location.reload();

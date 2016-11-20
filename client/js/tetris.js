@@ -74,6 +74,7 @@ var setEventHandlers = function () {
 
         socket.on('BreakoutLose', function(){
             console.log('BreakoutLose');
+            WinImg.style.display = 'inline-block';
             isGameOver = true;
         })
 }
@@ -233,7 +234,7 @@ function update()
 		curTime = new Date().getTime();
 		curPiece = player.curPiece;
 		// isGameOver = player.isGameOver;
-		if(curTime - prevTime > 500)
+		if(curTime - prevTime > 100)
 		{
 			//update the game piece
 			//Piece is falling down so we add one to y position, if it hit 
@@ -274,7 +275,8 @@ function update()
 			requestAnimationFrame(update);
 		}
 	else if (isGameOver == true) {
-		socket.emit('TetrisLose');
+		socket.emit('TetrisLose');		
+        LoseImg.style.display = 'inline-block';
 		ctx.drawImage(gameOverImg, 0, 0, 320, 640, 0, 0, 320, 640);
 	}
 }
