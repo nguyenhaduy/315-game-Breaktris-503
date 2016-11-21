@@ -93,8 +93,6 @@ function onReady()
 	
 	/*prevTime = curTime = player.curTime;*/
 	prevTime = curTime = 0;
-
-	setEventHandlers();
 	
 	document.onkeydown = getInput;
 }
@@ -222,6 +220,8 @@ function initGame()
 							
 	window.requestAnimationFrame = requestAnimFrame;
 	// gameData = player.gameData;
+
+	setEventHandlers();
 	
 	requestAnimationFrame(update);
 

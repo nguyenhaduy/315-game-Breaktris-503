@@ -1,4 +1,5 @@
-window.onload = function(){    
+// window.onload = function(){
+function BreakoutRun(){    
     // Initialize phaser engine
     var game = new Phaser.Game(320, 640, Phaser.AUTO, 'breakout', {
       preload: preload, create: create, update: update
@@ -94,6 +95,50 @@ window.onload = function(){
             }
         }
 
+    }
+    
+        // Event Handler Function
+    var setEventHandlers = function () {
+
+        // Update Ball
+        socket.on('BallUpdate', function(data){
+            // console.log('Ball Position Update');
+            ball.x = data.x;
+            ball.y = data.y;
+        })
+
+        // Update Paddle
+        socket.on('PaddleUpdate', function(data){
+            // console.log('Paddle Position Update');
+            paddle.x = data.x;
+            paddle.y = data.y;
+        })
+
+        // Update Bricks
+        socket.on('BricksUpdate', copyBreak)
+
+        // Start game
+        socket.on('StartGame', function(data){
+            // console.log('Block Update');
+            playing = data;
+        })
+
+        // Add 1 more breakline
+        socket.on('AddBrickline', function(){
+            console.log('Add Brick line');
+            addBrickLine = 1;
+            // addBricks();
+        });
+
+        socket.on('TetrisLose', function(){
+            console.log('Tetris Lose');
+            gameover.visible = true;
+            playing = false;            
+            WinImg.style.display = 'inline-block';
+            game.input.onDown.addOnce(function(){
+                    location.reload();
+                }, this);
+        })
     }
     
     // Loading data for the game
@@ -205,50 +250,6 @@ window.onload = function(){
         // Start event handler
         setEventHandlers();
     }   
-
-    // Event Handler Function
-    var setEventHandlers = function () {
-
-        // Update Ball
-        socket.on('BallUpdate', function(data){
-            // console.log('Ball Position Update');
-            ball.x = data.x;
-            ball.y = data.y;
-        })
-
-        // Update Paddle
-        socket.on('PaddleUpdate', function(data){
-            // console.log('Paddle Position Update');
-            paddle.x = data.x;
-            paddle.y = data.y;
-        })
-
-        // Update Bricks
-        socket.on('BricksUpdate', copyBreak)
-
-        // Start game
-        socket.on('StartGame', function(data){
-            // console.log('Block Update');
-            playing = data;
-        })
-
-        // Add 1 more breakline
-        socket.on('AddBrickline', function(){
-            console.log('Add Brick line');
-            addBrickLine = 1;
-            // addBricks();
-        });
-
-        socket.on('TetrisLose', function(){
-            console.log('Tetris Lose');
-            gameover.visible = true;
-            playing = false;            
-            WinImg.style.display = 'inline-block';
-            game.input.onDown.addOnce(function(){
-                    location.reload();
-                }, this);
-        })
-    }
 
     var flipFlop;
     function update() {

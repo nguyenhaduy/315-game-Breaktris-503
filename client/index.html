@@ -51,6 +51,29 @@
             
         </div>
 
+        <div id="CreateRoomScreen" style="display:none;">
+            <!-- <canvas id="menu" width="640" height="640"></canvas> -->
+            Room name: <input id="CreateRoomName" type="text"></input><br>
+            <button id="CreateButton">Create New Room</button>
+            <button id="BackButton1">Back</button>            
+        </div>
+
+        <div id="JoinRoomScreen" style="display:none;">
+            <!-- <canvas id="menu" width="640" height="640"></canvas> -->
+            Room name: <input id="JoinRoomName" type="text"></input><br>
+            <select name="drop1" id="Select1" size="4" multiple="multiple">
+                <option value="1">item 1</option>
+                <option value="2">item 2</option>
+                <option value="3">item 3</option>
+                <option value="4">item 4</option>
+                <option value="0">All</option>
+
+            </select>
+
+            <button id="JoinRoomButton">Join Room</button>
+            <button id="BackButton2">Back</button>            
+        </div>
+
         
         
     	<div id="TetrisBoard" style="display:none;">
@@ -74,17 +97,67 @@
         <script type="text/javascript">
                 WinImg = document.getElementById('WinImg');
                 LoseImg = document.getElementById('LoseImg');
+
+                MainScreen = document.getElementById('MainScreen');
                 PlayButton = document.getElementById('PlayButton');
                 NewButton = document.getElementById('NewButton');
                 JoinButton = document.getElementById('JoinButton');
                 IntroButton = document.getElementById('PlayButton');
+
+                CreateRoomScreen = document.getElementById('CreateRoomScreen');
+                CreateButton = document.getElementById('CreateButton');
+                BackButton1 = document.getElementById('BackButton1');
+                CreateRoomName = document.getElementById('CreateRoomName');
+
+                JoinRoomScreen = document.getElementById('JoinRoomScreen');
+                JoinRoomButton = document.getElementById('JoinRoomButton');
+                BackButton2 = document.getElementById('BackButton2');
+                JoinRoomName = document.getElementById('JoinRoomName');
+
                 TetrisBoard = document.getElementById('TetrisBoard');
                 BreakoutBoard = document.getElementById('BreakoutBoard');
-                MainScreen = document.getElementById('MainScreen');
+                                
+
                 PlayButton.onclick = function (){
                     MainScreen.style.display = 'none';
                     TetrisBoard.style.display = 'inline-block';
                     BreakoutBoard.style.display = 'inline-block';
+                }
+
+                NewButton.onclick = function (){
+                    MainScreen.style.display = 'none';
+                    CreateRoomScreen.style.display = 'inline-block';
+                }
+
+                JoinButton.onclick = function (){
+                    MainScreen.style.display = 'none';
+                    JoinRoomScreen.style.display = 'inline-block';
+                }
+
+                JoinRoomButton.onclick = function (){
+                    socket.emit('JoinRoom', JoinRoomName.value);              
+                    JoinRoomScreen.style.display = 'none';
+                    TetrisBoard.style.display = 'inline-block';
+                    BreakoutBoard.style.display = 'inline-block';
+                    BreakoutRun();
+                }
+
+                CreateButton.onclick = function (){
+                    socket.emit('CreateRoom', CreateRoomName.value);
+                    CreateRoomScreen.style.display = 'none';
+                    TetrisBoard.style.display = 'inline-block';
+                    BreakoutBoard.style.display = 'inline-block';
+                    BreakoutRun();
+                }
+
+                BackButton1.onclick = function (){
+                    MainScreen.style.display = 'inline-block';
+                    CreateRoomScreen.style.display = 'none';
+                }
+
+                BackButton2.onclick = function (){
+                    MainScreen.style.display = 'inline-block';
+                    JoinRoomScreen.style.display = 'none';
                 }
             </script>
 
