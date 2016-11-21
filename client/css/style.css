@@ -17,6 +17,16 @@ body
 	border: 2px solid #6e6e7b;
 }
 
+#TitleBackground
+{
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:700px;
+	height:700px;
+	margin:0 auto;
+}
+
 #WinImg
 {
 	position:absolute;

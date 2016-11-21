@@ -98,7 +98,7 @@ function BreakoutRun(){
     }
     
         // Event Handler Function
-    var setBreakoutEventHandlers = function () {
+    var setEventHandlers = function () {
 
         // Update Ball
         socket.on('BallUpdate', function(data){
@@ -132,8 +132,9 @@ function BreakoutRun(){
 
         socket.on('TetrisLose', function(){
             console.log('Tetris Lose');
-            gameover.visible = true;
-            playing = false;            
+            // gameover.visible = true;
+            playing = false;
+            ball.body.velocity.set(0, 0);           
             WinImg.style.display = 'inline-block';
             setTimeout(function() {
                 location.reload();
@@ -251,12 +252,12 @@ function BreakoutRun(){
         }
 
         // Start event handler
-        setBreakoutEventHandlers();
+        setEventHandlers();
     }   
 
     var flipFlop;
     function update() {
-        if (myID == 0 && playing == true){
+        if (myID == 0){
             game.physics.arcade.collide(ball, paddle, ballHitPaddle);
             game.physics.arcade.collide(ball, bricks, ballHitBrick);
             if(playing) {
@@ -289,9 +290,7 @@ function BreakoutRun(){
                 addBricks();
                 addBrickLine = 0;
             }
-
         }
-
     }
 
     function startGame() {
@@ -448,9 +447,8 @@ function BreakoutRun(){
             }
             else {
 				socket.emit('BreakoutLose');
-				gameover.visible = true;
+				// gameover.visible = true;
                 LoseImg.style.display = 'inline-block';
-                //alert('You lost, game over!');
                 setTimeout(function() {
                     location.reload();
                 }, 4000);

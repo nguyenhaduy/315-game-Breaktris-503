@@ -48,7 +48,7 @@ TetrisPlayer = function(index, game){
 
 // var tempPiece = getRandomPiece();
 
-var setTetrisEventHandlers = function () {
+var setEventHandlers = function () {
         
         // Update Tetris Piece
         socket.on('PieceUpdate', function(data){
@@ -224,7 +224,7 @@ function initGame()
 	window.requestAnimationFrame = requestAnimFrame;
 	// gameData = player.gameData;
 
-	setTetrisEventHandlers();
+	setEventHandlers();
 	
 	requestAnimationFrame(update);
 

@@ -28,7 +28,9 @@ function Player (id){
 function GameRoom(roomID, player){
     this.player1 = player;
     this.player2;
-    this.NumberOfGame = 0;
+    this.NumberOfGames = 0;
+    this.player1win = 0;
+    this.player2win = 0;
     this.playable = false;
     this.id = roomID;
 }
@@ -127,6 +129,7 @@ Player.onConnect = function(socket){
         
         socket.on('BreakoutLose',function(){
             console.log('Breakout Player Lose. Tetris Player Win.');
+            player.opponent.numberofwin += 1;
             if (player.room === undefined || player.opponent === undefined){}
             else{
                 if(player.room.playable){
@@ -180,6 +183,7 @@ Player.onConnect = function(socket){
         
         socket.on('TetrisLose',function(){
             console.log('Tetris Player Lose. Breakout Player Win');
+            player.opponent.numberofwin += 1;
             if (player.room === undefined || player.opponent === undefined){}
             else{
                 if(player.room.playable){
