@@ -23,6 +23,7 @@
         var TetrisBoard;
         var BreakoutBoard;
         var MainScreen;
+        var JoinRoomBox;
         var TetrisLose = false;
         // var Game;
     	socket = io();
@@ -59,14 +60,14 @@
         <div id="CreateRoomScreen" style="display:none;">
             <img id="CreateRoomImg" src="client/img/CreateRoomImg.jpg"></img>
             Room name: <input id="CreateRoomName" type="text"></input><br>
-            <button id="CreateButton">Create New Room</button>
-            <button id="BackButton1">Back</button>            
+            <button id="CreateButton"><font size="4">Create New Room</font></button>
+            <button id="BackButton1"><font size="4">Back</font></button>            
         </div>
 
         <div id="JoinRoomScreen" style="display:none;">
             <img id="JoinRoomImg" src="client/img/JoinRoomImg.jpg"></img>
             Room name: <input id="JoinRoomName" type="text"></input><br>
-            <select name="drop1" id="Select1" size="4" multiple="multiple">
+            <select name="drop1" id="JoinRoomBox" size="4" multiple="multiple">
                 <option value="1">item 1</option>
                 <option value="2">item 2</option>
                 <option value="3">item 3</option>
@@ -75,8 +76,8 @@
 
             </select>
 
-            <button id="JoinRoomButton">Join Room</button>
-            <button id="BackButton2">Back</button>            
+            <button id="JoinRoomButton"><font size="4">Join Room</font></button>
+            <button id="BackButton2"><font size="4">Back</font></button>            
         </div>
 
         
@@ -122,6 +123,7 @@
                 JoinRoomButton = document.getElementById('JoinRoomButton');
                 BackButton2 = document.getElementById('BackButton2');
                 JoinRoomName = document.getElementById('JoinRoomName');
+                JoinRoomBox = document.getElementById("JoinRoomBox");
 
                 TetrisBoard = document.getElementById('TetrisBoard');
                 BreakoutBoard = document.getElementById('BreakoutBoard');
@@ -140,6 +142,10 @@
 
                 JoinButton.onclick = function (){
                     MainScreen.style.display = 'none';
+                    
+                    // var option = document.createElement("option");
+                    // option.text = "Kiwi";
+                    // JoinRoomBox.add(option);
                     JoinRoomScreen.style.display = 'inline-block';
                 }
 
