@@ -43,7 +43,7 @@ body
 	position:absolute;
 	left:0px;
 	top:0px;
-	background-color:#8a8a8a;	
+	background-color:#FFF;	
 	width:700px;
 	height:700px;
 	margin:0 auto;
@@ -56,7 +56,7 @@ body
 	position:absolute;
 	left:0px;
 	top:0px;
-	background-color:#8a8a8a;	
+	background-color:#FFF;	
 	width:700px;
 	height:700px;
 	margin:0 auto;
@@ -69,7 +69,7 @@ body
 	position:absolute;
 	left:0px;
 	top:0px;
-	background-color:#8a8a8a;	
+	background-color:#FFF;	
 	width:700px;
 	height:700px;
 	margin:0 auto;
@@ -118,47 +118,47 @@ body
 	position:absolute;
 	left:250px;
 	top:300px;
-	background-color:#8a8a8a;	
-	width:200px;
+	/*background-color:#FFF;	*/
+	width:150px;
 	height:50px;
 	margin:0 auto;
-	border: 2px solid #6e6e7b;
+	/*border: 2px solid #6e6e7b;*/
 }
 
 #NewButton
 {
 	position:absolute;
-	left:250px;
-	top:400px;
-	background-color:#8a8a8a;	
-	width:200px;
+	left:50px;
+	top:600px;
+	/*background-color:#FFF;	*/
+	width:160px;
 	height:50px;
 	margin:0 auto;
-	border: 2px solid #6e6e7b;
+	/*border: 2px solid #6e6e7b;*/
 }
 
 #JoinButton
 {
 	position:absolute;
-	left:250px;
-	top:500px;
-	background-color:#8a8a8a;	
-	width:200px;
+	left:270px;
+	top:600px;
+	/*background-color:#FFF;	*/
+	width:160px;
 	height:50px;
 	margin:0 auto;
-	border: 2px solid #6e6e7b;
+	/*border: 2px solid #6e6e7b;*/
 }
 
 #IntroButton
 {
 	position:absolute;
-	left:250px;
+	left:490px;
 	top:600px;
-	background-color:#8a8a8a;	
-	width:200px;
+	/*background-color:#FFF;	*/
+	width:160px;
 	height:50px;
 	margin:0 auto;
-	border: 2px solid #6e6e7b;
+	/*border: 2px solid #6e6e7b;*/
 }
 /*#directions p
 {

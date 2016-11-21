@@ -28,6 +28,7 @@ function Player (id){
 function GameRoom(roomID, player){
     this.player1 = player;
     this.player2;
+    this.NumberOfGame = 0;
     this.playable = false;
     this.id = roomID;
 }
@@ -61,7 +62,6 @@ Player.onConnect = function(socket){
             SOCKET_LIST[player.id].emit('player ID', 1);
             console.log('Player 1 opponent ID : ' + player.opponent.id);
             console.log('Player 2 opponent ID : ' + player.opponent.opponent.id);
-
         }
         // if(SOCKET_LIST[1]){
         //    SOCKET_LIST[1].emit('BallUpdate', data);
@@ -130,6 +130,7 @@ Player.onConnect = function(socket){
             if (player.room === undefined || player.opponent === undefined){}
             else{
                 if(player.room.playable){
+                    player.room.playable = false;
                     if (SOCKET_LIST[player.opponent.id])
                         SOCKET_LIST[player.opponent.id].emit('BreakoutLose');
                 }
@@ -182,6 +183,7 @@ Player.onConnect = function(socket){
             if (player.room === undefined || player.opponent === undefined){}
             else{
                 if(player.room.playable){
+                    player.room.playable = false;
                     if (SOCKET_LIST[player.opponent.id])
                         SOCKET_LIST[player.opponent.id].emit('TetrisLose');
                 }
@@ -193,9 +195,12 @@ Player.onConnect = function(socket){
             console.log('One player disconnected.')
             // player_id = socket.id;
             // Player.onDisconnect(socket);
-            if (SOCKET_LIST[player.opponent.id])
-                SOCKET_LIST[player.opponent.id].disconnect();
-            delete ROOM_LIST[player.room.id];
+            if (!(player.opponent === undefined)){
+                if (SOCKET_LIST[player.opponent.id])
+                    SOCKET_LIST[player.opponent.id].disconnect();
+            }
+            if (!(player.room === undefined))
+                delete ROOM_LIST[player.room.id];
             delete PLAYER_LIST[player.id];
             delete SOCKET_LIST[player.id];
         });

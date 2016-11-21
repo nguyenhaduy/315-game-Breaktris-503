@@ -48,7 +48,7 @@ TetrisPlayer = function(index, game){
 
 // var tempPiece = getRandomPiece();
 
-var setEventHandlers = function () {
+var setTetrisEventHandlers = function () {
         
         // Update Tetris Piece
         socket.on('PieceUpdate', function(data){
@@ -76,6 +76,9 @@ var setEventHandlers = function () {
             console.log('BreakoutLose');
             WinImg.style.display = 'inline-block';
             isGameOver = true;
+            setTimeout(function() {
+                location.reload();
+            }, 4000);
         })
 }
 
@@ -221,7 +224,7 @@ function initGame()
 	window.requestAnimationFrame = requestAnimFrame;
 	// gameData = player.gameData;
 
-	setEventHandlers();
+	setTetrisEventHandlers();
 	
 	requestAnimationFrame(update);
 
@@ -275,9 +278,9 @@ function update()
 			requestAnimationFrame(update);
 		}
 	else if (isGameOver == true) {
-		socket.emit('TetrisLose');		
-        LoseImg.style.display = 'inline-block';
-		ctx.drawImage(gameOverImg, 0, 0, 320, 640, 0, 0, 320, 640);
+		// socket.emit('TetrisLose');		
+        // LoseImg.style.display = 'inline-block';
+		// ctx.drawImage(gameOverImg, 0, 0, 320, 640, 0, 0, 320, 640);
 	}
 }
 
@@ -308,9 +311,16 @@ function copyData(p)
 	
 	checkLines();
 	
+	// If tetris piece pass the top of the board
 	if(p.gridy < 0)
 	{
 		isGameOver = true;
+		socket.emit('TetrisLose');		
+        LoseImg.style.display = 'inline-block';
+		// ctx.drawImage(gameOverImg, 0, 0, 320, 640, 0, 0, 320, 640);
+		setTimeout(function() {
+            location.reload();
+        }, 4000);
 	}
 }
 

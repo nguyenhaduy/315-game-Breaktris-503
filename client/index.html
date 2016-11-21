@@ -43,7 +43,8 @@
     <div id="game">
         <div id="MainScreen" >
             <canvas id="menu" width="640" height="640"></canvas>
-            <button id="PlayButton">Play Game</button>
+            <img id="WinImg" src="client/img/title.jpg" align="top"></img>
+            <button id="PlayButton" style="display:none;">Play Game</button>
             <button id="NewButton">Create New Room</button>
             <button id="JoinButton">Join Existing Room</button>
             <button id="IntroButton">How To Play</button>
@@ -91,6 +92,7 @@
         <div id="score" style="display:none;">
             <p>Lines: <span id="lines"></span></p>
         </div>
+        
 
         <img id="WinImg" src="client/img/WinGame.jpg" align="top" style="display:none;"></img>
         <img id="LoseImg" src="client/img/LoseGame.jpg" align="top" style="display:none;"></img>

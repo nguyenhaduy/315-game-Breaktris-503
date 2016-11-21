@@ -98,7 +98,7 @@ function BreakoutRun(){
     }
     
         // Event Handler Function
-    var setEventHandlers = function () {
+    var setBreakoutEventHandlers = function () {
 
         // Update Ball
         socket.on('BallUpdate', function(data){
@@ -135,9 +135,12 @@ function BreakoutRun(){
             gameover.visible = true;
             playing = false;            
             WinImg.style.display = 'inline-block';
-            game.input.onDown.addOnce(function(){
-                    location.reload();
-                }, this);
+            setTimeout(function() {
+                location.reload();
+            }, 4000);
+            // game.input.onDown.addOnce(function(){
+            //         location.reload();
+            //     }, this);
         })
     }
     
@@ -248,12 +251,12 @@ function BreakoutRun(){
         }
 
         // Start event handler
-        setEventHandlers();
+        setBreakoutEventHandlers();
     }   
 
     var flipFlop;
     function update() {
-        if (myID == 0){
+        if (myID == 0 && playing == true){
             game.physics.arcade.collide(ball, paddle, ballHitPaddle);
             game.physics.arcade.collide(ball, bricks, ballHitBrick);
             if(playing) {
@@ -360,7 +363,6 @@ function BreakoutRun(){
             newBrick.anchor.set(0.5);
             bricks.add(newBrick);
         }
-
     }
 
     function ballHitPaddle(ball, paddle) {
@@ -449,9 +451,12 @@ function BreakoutRun(){
 				gameover.visible = true;
                 LoseImg.style.display = 'inline-block';
                 //alert('You lost, game over!');
-				game.input.onDown.addOnce(function(){
-					location.reload();
-				}, this);
+                setTimeout(function() {
+                    location.reload();
+                }, 4000);
+				// game.input.onDown.addOnce(function(){
+				// 	location.reload();
+				// }, this);
             }
         }
         else if (myID == 1){
