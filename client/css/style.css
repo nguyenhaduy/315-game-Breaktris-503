@@ -3,6 +3,10 @@ body
 	background-color:#FFFFFF;
 }
 
+input[type="text"]
+{
+    font-size:32px;
+}
 
 #game
 {
@@ -18,6 +22,26 @@ body
 }
 
 #TitleBackground
+{
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:700px;
+	height:700px;
+	margin:0 auto;
+}
+
+#CreateRoomImg
+{
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:700px;
+	height:700px;
+	margin:0 auto;
+}
+
+#JoinRoomImg
 {
 	position:absolute;
 	left:0px;
@@ -179,6 +203,76 @@ body
 	height:50px;
 	margin:0 auto;
 	/*border: 2px solid #6e6e7b;*/
+}
+
+#CreateRoomName{
+	position:absolute;
+	left:200px;
+	top:300px;
+	/*background-color:#FFF;	*/
+	width:300px;
+	height:50px;
+	margin:0 auto;
+	input[type="text"]
+	{
+	    font-size:24px;
+	}
+}
+
+#CreateButton
+{
+	position:absolute;
+	left:180px;
+	top:380px;
+	/*background-color:#FFF;	*/
+	width:160px;
+	height:50px;
+	margin:0 auto;
+	/*border: 2px solid #6e6e7b;*/
+}
+
+#BackButton1
+{
+	position:absolute;
+	left:360px;
+	top:380px;
+	/*background-color:#FFF;	*/
+	width:160px;
+	height:50px;
+	margin:0 auto;
+}
+
+#JoinRoomName{
+	position:absolute;
+	left:200px;
+	top:300px;
+	/*background-color:#FFF;	*/
+	width:300px;
+	height:50px;
+	margin:0 auto;
+}
+
+#JoinRoomButton
+{
+	position:absolute;
+	left:180px;
+	top:380px;
+	/*background-color:#FFF;	*/
+	width:160px;
+	height:50px;
+	margin:0 auto;
+	/*border: 2px solid #6e6e7b;*/
+}
+
+#BackButton2
+{
+	position:absolute;
+	left:360px;
+	top:380px;
+	/*background-color:#FFF;	*/
+	width:160px;
+	height:50px;
+	margin:0 auto;
 }
 /*#directions p
 {

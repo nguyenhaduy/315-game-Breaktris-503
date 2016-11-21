@@ -338,16 +338,12 @@ function copyData(p)
 		isGameOver = true;
 		socket.emit('TetrisLose');
 		// TetrisLose = true;		
-  //       LoseImg.style.display = 'inline-block';
+        LoseImg.style.display = 'inline-block';
 		// // ctx.drawImage(gameOverImg, 0, 0, 320, 640, 0, 0, 320, 640);
-		// setTimeout(function() {
-		// 	// game.create();
-		// 	// delete BreakoutRun;
-		// 	// BreakoutRun();
-
-		// 	LoseImg.style.display = 'none';
-  //           // location.reload();
-  //       }, 4000);
+		setTimeout(function() {
+			// LoseImg.style.display = 'none';
+            location.reload();
+        }, 3000);
 	}
 }
 

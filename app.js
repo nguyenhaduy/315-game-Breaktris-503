@@ -1,4 +1,3 @@
-
 var express = require('express');
 var app = express();
 var serv = require('http').Server(app);
@@ -41,20 +40,23 @@ Player.onConnect = function(socket){
     PLAYER_LIST[player.id] = player;
 
     socket.on('CreateRoom',function(data){
-        console.log('Created Room: ' + data);
-        var room = new GameRoom(data, player);
-        // room.player1 = player;
-        player.room = room;
-        ROOM_LIST[data] = room;
-        SOCKET_LIST[player.id].emit('player ID', 0);
-        // if(SOCKET_LIST[1]){
-        //    SOCKET_LIST[1].emit('BallUpdate', data);
-        // }
+        var temp1 = false;
+        if (!ROOM_LIST[data]){
+            temp1 = true;
+            console.log('Created Room: ' + data);
+            var room = new GameRoom(data, player);
+            player.room = room;
+            ROOM_LIST[data] = room;
+            SOCKET_LIST[player.id].emit('player ID', 0);
+        }
+        socket.emit('CreateRoom', temp1);
     });
 
     socket.on('JoinRoom',function(data){
         console.log('Join Room: ' + data);
+        var temp2 = false;
         if (ROOM_LIST[data]){
+            temp2 = true;
             ROOM_LIST[data].player2 = player;   // Set join player as player 2
             player.opponent = ROOM_LIST[data].player1;
             console.log('Player 1 ID : ' + ROOM_LIST[data].player1.id);            
@@ -65,9 +67,7 @@ Player.onConnect = function(socket){
             console.log('Player 1 opponent ID : ' + player.opponent.id);
             console.log('Player 2 opponent ID : ' + player.opponent.opponent.id);
         }
-        // if(SOCKET_LIST[1]){
-        //    SOCKET_LIST[1].emit('BallUpdate', data);
-        // }
+        socket.emit('JoinRoom', temp2);
     });
     
 
@@ -144,11 +144,13 @@ Player.onConnect = function(socket){
             if (player.room === undefined || player.opponent === undefined){}
             else{
                 if(player.room.playable){
-                    player.room.playable = false;
-                    if (SOCKET_LIST[player.id])
-                        SOCKET_LIST[player.id].emit('NextGame');
+                    // player.room.playable = false;
+                    // if (SOCKET_LIST[player.id])
+                    //     SOCKET_LIST[player.id].emit('NextGame');
+                    // if (SOCKET_LIST[player.opponent.id])
+                    //     SOCKET_LIST[player.opponent.id].emit('NextGame');
                     if (SOCKET_LIST[player.opponent.id])
-                        SOCKET_LIST[player.opponent.id].emit('NextGame');
+                        SOCKET_LIST[player.opponent.id].emit('BreakoutLose');
                 }
             }
         });
@@ -200,11 +202,13 @@ Player.onConnect = function(socket){
             if (player.room === undefined || player.opponent === undefined){}
             else{
                 if(player.room.playable){
-                    player.room.playable = false;
-                    if (SOCKET_LIST[player.id])
-                        SOCKET_LIST[player.id].emit('NextGame');
+                    // player.room.playable = false;
+                    // if (SOCKET_LIST[player.id])
+                    //     SOCKET_LIST[player.id].emit('NextGame');
+                    // if (SOCKET_LIST[player.opponent.id])
+                    //     SOCKET_LIST[player.opponent.id].emit('NextGame');
                     if (SOCKET_LIST[player.opponent.id])
-                        SOCKET_LIST[player.opponent.id].emit('NextGame');
+                        SOCKET_LIST[player.opponent.id].emit('TetrisLose');
                 }
             }
         });
@@ -255,102 +259,8 @@ io.sockets.on('connection', function(socket){
 	console.log('New player connected to socket server.')
     socket.id = Math.random();
     SOCKET_LIST[socket.id] = socket;
- //    if (player_id < 2){
-	//     socket.id = player_id;
-	//     if (socket.id == 0){
-	//     	socket.emit('player ID', 0);
-	//     	console.log('This player ' +socket.id + ' plays Breakout.');
-	//     }
-	//     else if (socket.id == 1){
-	//     	socket.emit('player ID', 1);
-	//     	console.log('This player ' +socket.id + ' plays Tetris.');
-	//     }
-	//     SOCKET_LIST[socket.id] = socket;
-	//     player_id++;
-	// }
- //    else{
- //        for(var i in SOCKET_LIST){
- //            SOCKET_LIST[i].disconnect();
- //        }
- //    }
    
-    Player.onConnect(socket);
-
- //    socket.on('BallUpdate',function(data){
- //    	// console.log('Ball position update');
- //        if(SOCKET_LIST[1]){
- //    	   SOCKET_LIST[1].emit('BallUpdate', data);
- //        }
- //    });
-
- //    socket.on('PaddleUpdate',function(data){
- //        // console.log('Ball position update');
- //        if(SOCKET_LIST[1]){
- //            SOCKET_LIST[1].emit('PaddleUpdate', data);
- //        }
- //    });
-
-
- //    socket.on('BricksUpdate',function(data){
- //        if(SOCKET_LIST[1]){
- //            SOCKET_LIST[1].emit('BricksUpdate', data);
- //        }
- //    });
-
- //    socket.on('StartGame',function(data){
- //    	console.log('Game Start.');
- //        if(SOCKET_LIST[1]){
- //            SOCKET_LIST[1].emit('StartGame', data);
- //        }
- //    });
-
- //    socket.on('MakeInvi',function(){
- //    	console.log('Current Tetris Piece is Invisible.');
- //        if(SOCKET_LIST[1]){
- //            SOCKET_LIST[1].emit('MakeInvi');
- //        }
- //    });
-	
-	// socket.on('BreakoutLose',function(){
-	// 	console.log('Breakout Player Lose. Tetris Player Win.');
- //        if(SOCKET_LIST[1]){
- //            SOCKET_LIST[1].emit('BreakoutLose');
- //        }
- //    });
-
- //    socket.on('PieceUpdate',function(data){
- //        if(SOCKET_LIST[0]){
- //            SOCKET_LIST[0].emit('PieceUpdate', data);
- //        }
- //    });
-
- //    socket.on('BlockUpdate',function(data){
- //        if(SOCKET_LIST[0]){
- //            SOCKET_LIST[0].emit('BlockUpdate', data);
- //        }
- //    });
-
- //    socket.on('DataUpdate',function(data){
- //        if(SOCKET_LIST[0]){
- //            SOCKET_LIST[0].emit('DataUpdate', data);
- //        }
- //    });
-
- //    socket.on('AddBrickline',function(){
- //        if(SOCKET_LIST[0]){
- //            console.log('Add Brick Line.')
- //            SOCKET_LIST[0].emit('AddBrickline');
- //        }
- //    });
-	
-	// socket.on('TetrisLose',function(){
-	// 	console.log('Tetris Player Lose. Breakout Player Win');
- //        if(SOCKET_LIST[0]){
- //            SOCKET_LIST[0].emit('TetrisLose');
- //        }
- //    });
-   
-    
+    Player.onConnect(socket);    
 
     socket.on('sendMsgToServer',function(data){
         var playerName = ("" + socket.id).slice(2,7);
@@ -369,20 +279,3 @@ io.sockets.on('connection', function(socket){
       
    
 });
- 
-// setInterval(function(){
-//     // var pack = {
-//     //     player:Player.update(),
-//     //     bullet:Bullet.update(),
-//     // }
-//     // if(SOCKET_LIST[1]){
-//     //     // SOCKET_LIST[1].emit('BallUpdate', BreakoutBall);
-//     //     // SOCKET_LIST[1].emit('PaddleUpdate', BreakoutPaddle);
-//     //     // SOCKET_LIST[1].emit('BricksUpdate', BrickData);
-//     // }
-//     // for(var i in SOCKET_LIST){
-//     //     var socket = SOCKET_LIST[i];
-//     //     socket.emit('newPositions',pack);
-//     // }
-// },1000/60);
- 

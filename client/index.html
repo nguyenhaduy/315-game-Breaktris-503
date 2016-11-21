@@ -49,22 +49,22 @@
             <canvas id="menu" width="640" height="640"></canvas>
             <img id="TitleBackground" src="client/img/title.jpg" align="top"></img>
             <button id="PlayButton" style="display:none;">Play Game</button>
-            <button id="NewButton">Create New Room</button>
-            <button id="JoinButton">Join Existing Room</button>
-            <button id="IntroButton">How To Play</button>
+            <img id="NewButton" src="client/img/NewButton.png"></img>
+            <img id="JoinButton" src="client/img/JoinButton.png"></img>
+            <img id="IntroButton" src="client/img/IntroButton.png"></img>
             <script type="text/javascript" src="client/js/menu.js"></script>
             
         </div>
 
         <div id="CreateRoomScreen" style="display:none;">
-            <!-- <canvas id="menu" width="640" height="640"></canvas> -->
+            <img id="CreateRoomImg" src="client/img/CreateRoomImg.jpg"></img>
             Room name: <input id="CreateRoomName" type="text"></input><br>
             <button id="CreateButton">Create New Room</button>
             <button id="BackButton1">Back</button>            
         </div>
 
         <div id="JoinRoomScreen" style="display:none;">
-            <!-- <canvas id="menu" width="640" height="640"></canvas> -->
+            <img id="JoinRoomImg" src="client/img/JoinRoomImg.jpg"></img>
             Room name: <input id="JoinRoomName" type="text"></input><br>
             <select name="drop1" id="Select1" size="4" multiple="multiple">
                 <option value="1">item 1</option>
@@ -144,19 +144,33 @@
                 }
 
                 JoinRoomButton.onclick = function (){
-                    socket.emit('JoinRoom', JoinRoomName.value);              
-                    JoinRoomScreen.style.display = 'none';
-                    TetrisBoard.style.display = 'inline-block';
-                    BreakoutBoard.style.display = 'inline-block';
-                    BreakoutRun();
+                    socket.emit('JoinRoom', JoinRoomName.value);
+                    socket.on('JoinRoom', function(data){
+                        if (data == true){              
+                            JoinRoomScreen.style.display = 'none';
+                            TetrisBoard.style.display = 'inline-block';
+                            BreakoutBoard.style.display = 'inline-block';
+                            BreakoutRun();
+                        }
+                        else{
+                            alert('This room is not available!');
+                        }
+                    })
                 }
 
                 CreateButton.onclick = function (){
                     socket.emit('CreateRoom', CreateRoomName.value);
-                    CreateRoomScreen.style.display = 'none';
-                    TetrisBoard.style.display = 'inline-block';
-                    BreakoutBoard.style.display = 'inline-block';
-                    BreakoutRun();
+                    socket.on('CreateRoom', function(data){
+                        if (data == true){    
+                            CreateRoomScreen.style.display = 'none';
+                            TetrisBoard.style.display = 'inline-block';
+                            BreakoutBoard.style.display = 'inline-block';
+                            BreakoutRun();
+                        }
+                        else{
+                            alert('This room name is already taken!');
+                        }
+                    })
                 }
 
                 BackButton1.onclick = function (){
