@@ -77,7 +77,12 @@ var setEventHandlers = function () {
             WinImg.style.display = 'inline-block';
             isGameOver = true;
             setTimeout(function() {
-                location.reload();
+
+                // location.reload();
+                // BreakoutRun.create();
+                delete BreakoutRun;
+                BreakoutRun();
+                WinImg.style.display = 'none';
             }, 4000);
         })
 }
@@ -319,7 +324,11 @@ function copyData(p)
         LoseImg.style.display = 'inline-block';
 		// ctx.drawImage(gameOverImg, 0, 0, 320, 640, 0, 0, 320, 640);
 		setTimeout(function() {
-            location.reload();
+			// BreakoutRun.create();
+			delete BreakoutRun;
+			BreakoutRun();
+			LoseImg.style.display = 'none';
+            // location.reload();
         }, 4000);
 	}
 }

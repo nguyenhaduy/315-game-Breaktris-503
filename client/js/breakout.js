@@ -1,7 +1,7 @@
 // window.onload = function(){
-function BreakoutRun(){    
+var BreakoutRun = function(){    
     // Initialize phaser engine
-    var game = new Phaser.Game(320, 640, Phaser.AUTO, 'breakout', {
+    self.game = new Phaser.Game(320, 640, Phaser.CANVAS, 'breakout', {
       preload: preload, create: create, update: update
     });
 
@@ -28,6 +28,8 @@ function BreakoutRun(){
     var BreakoutPlayer;
 	var gameover;
 
+    // var create;
+
     // Information to create brick
     var brickInfo = {
             width: 30,
@@ -46,25 +48,25 @@ function BreakoutRun(){
     //Checkout Player class
     BreakoutPlayer = function(index, game, player){
 
-        this.ball = game.add.sprite(game.world.width*0.5, game.world.height*0.5, 'ball');
-        this.ball.animations.add('wobble', [0,1,0,2,0,1,0,2,0], 24);
-        this.ball.anchor.set(0.5);
-        game.physics.enable(this.ball, Phaser.Physics.ARCADE);
+        // this.ball = game.add.sprite(game.world.width*0.5, game.world.height*0.5, 'ball');
+        // this.ball.animations.add('wobble', [0,1,0,2,0,1,0,2,0], 24);
+        // this.ball.anchor.set(0.5);
+        // game.physics.enable(this.ball, Phaser.Physics.ARCADE);
 
-        this.paddle = game.add.sprite(game.world.width*0.5, game.world.height-5, 'paddle');
-        this.paddle.anchor.set(0.5,1);
-        game.physics.enable(this.paddle, Phaser.Physics.ARCADE);
-        this.paddle.body.immovable = true;;
-        this.bricks;
-        this.newBrick;
-        this.score = 0;
-        this.lives = 3;
-        this.playing = false;
-        this.upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
-        this.downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
-        this.leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-        this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-        this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        // this.paddle = game.add.sprite(game.world.width*0.5, game.world.height-5, 'paddle');
+        // this.paddle.anchor.set(0.5,1);
+        // game.physics.enable(this.paddle, Phaser.Physics.ARCADE);
+        // this.paddle.body.immovable = true;;
+        // this.bricks;
+        // this.newBrick;
+        // this.score = 0;
+        // this.lives = 3;
+        // this.playing = false;
+        // this.upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
+        // this.downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
+        // this.leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
+        // this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+        // this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     }
 
     // Update Breakout Player Function
@@ -137,7 +139,12 @@ function BreakoutRun(){
             ball.body.velocity.set(0, 0);           
             WinImg.style.display = 'inline-block';
             setTimeout(function() {
-                location.reload();
+                // location.reload();
+                ball.destroy();
+                paddle.destroy();
+                bricks.destroy();
+                create();
+                WinImg.style.display = 'none';
             }, 4000);
             // game.input.onDown.addOnce(function(){
             //         location.reload();
@@ -176,14 +183,21 @@ function BreakoutRun(){
             player = new BreakoutPlayer(myID, game, breakout);
 
             // Create ball object and set its attributes
-            ball = player.ball;
+            ball = game.add.sprite(game.world.width*0.5, game.world.height*0.5, 'ball');
+            ball.animations.add('wobble', [0,1,0,2,0,1,0,2,0], 24);
+            ball.anchor.set(0.5);
+            game.physics.enable(ball, Phaser.Physics.ARCADE);
             ball.body.collideWorldBounds = true;
             ball.body.bounce.set(1);
             ball.checkWorldBounds = true;
             ball.events.onOutOfBounds.add(ballLeaveScreen, this);
 
             // Create paddle object
-            paddle = player.paddle;
+            paddle = game.add.sprite(game.world.width*0.5, game.world.height-5, 'paddle');
+            paddle.anchor.set(0.5,1);
+            game.physics.enable(paddle, Phaser.Physics.ARCADE);
+            paddle.body.immovable = true;;
+            // paddle = player.paddle;
 
             initBrick();
 
@@ -202,12 +216,12 @@ function BreakoutRun(){
 			gameover.anchor.set(0.5);
 			gameover.visible = false;
 
-            cursors = player.cursors;
-            upKey = player.upKey;
-            downKey = player.downKey;
-            leftKey = player.leftKey;
-            rightKey = player.rightKey;
-            spaceKey = player.spaceKey;
+            // cursors = player.cursors;
+            upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
+            downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
+            leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
+            rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+            spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
             
             setInterval(function(){
                 var ballposition = {
@@ -450,7 +464,12 @@ function BreakoutRun(){
 				// gameover.visible = true;
                 LoseImg.style.display = 'inline-block';
                 setTimeout(function() {
-                    location.reload();
+                    ball.destroy();
+                    paddle.destroy();
+                    bricks.destroy();
+                    create();
+                    LoseImg.style.display = 'none';
+                    // location.reload();
                 }, 4000);
 				// game.input.onDown.addOnce(function(){
 				// 	location.reload();

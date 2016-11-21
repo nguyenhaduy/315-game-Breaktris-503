@@ -203,8 +203,9 @@ Player.onConnect = function(socket){
                 if (SOCKET_LIST[player.opponent.id])
                     SOCKET_LIST[player.opponent.id].disconnect();
             }
-            if (!(player.room === undefined))
+            if (!(player.room === undefined)){
                 delete ROOM_LIST[player.room.id];
+            }
             delete PLAYER_LIST[player.id];
             delete SOCKET_LIST[player.id];
         });
