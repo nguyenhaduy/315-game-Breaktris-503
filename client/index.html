@@ -23,6 +23,8 @@
         var TetrisBoard;
         var BreakoutBoard;
         var MainScreen;
+        var TetrisLose = false;
+        // var Game;
     	socket = io();
 
         // Update ID
@@ -98,10 +100,12 @@
 
         <img id="WinImg" src="client/img/WinGame.jpg" align="top" style="display:none;"></img>
         <img id="LoseImg" src="client/img/LoseGame.jpg" align="top" style="display:none;"></img>
+        <img id="Round2Img" src="client/img/Round2.jpg" align="top" style="display:none;"></img>
 
         <script type="text/javascript">
                 WinImg = document.getElementById('WinImg');
                 LoseImg = document.getElementById('LoseImg');
+                Round2Img = document.getElementById('Round2Img');
 
                 MainScreen = document.getElementById('MainScreen');
                 PlayButton = document.getElementById('PlayButton');

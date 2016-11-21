@@ -126,6 +126,17 @@ Player.onConnect = function(socket){
                 }
             }
         });
+
+        socket.on('MakeSpeed',function(){
+            console.log('Increase Current Tetris Piece Speed.');
+            if (player.room === undefined || player.opponent === undefined){}
+            else{
+                if(player.room.playable){
+                    if (SOCKET_LIST[player.opponent.id])
+                        SOCKET_LIST[player.opponent.id].emit('MakeSpeed');
+                }
+            }
+        });
         
         socket.on('BreakoutLose',function(){
             console.log('Breakout Player Lose. Tetris Player Win.');
@@ -134,8 +145,10 @@ Player.onConnect = function(socket){
             else{
                 if(player.room.playable){
                     player.room.playable = false;
+                    if (SOCKET_LIST[player.id])
+                        SOCKET_LIST[player.id].emit('NextGame');
                     if (SOCKET_LIST[player.opponent.id])
-                        SOCKET_LIST[player.opponent.id].emit('BreakoutLose');
+                        SOCKET_LIST[player.opponent.id].emit('NextGame');
                 }
             }
         });
@@ -188,8 +201,10 @@ Player.onConnect = function(socket){
             else{
                 if(player.room.playable){
                     player.room.playable = false;
+                    if (SOCKET_LIST[player.id])
+                        SOCKET_LIST[player.id].emit('NextGame');
                     if (SOCKET_LIST[player.opponent.id])
-                        SOCKET_LIST[player.opponent.id].emit('TetrisLose');
+                        SOCKET_LIST[player.opponent.id].emit('NextGame');
                 }
             }
         });

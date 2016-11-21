@@ -18,7 +18,7 @@ var lineSpan; // Reference to span object in <div id = "score"> lines
 var curLines; // The number of lines that the player has
 var TetrisPlayer; // Will be used as an object
 var event;
-
+var speedIncrease = 0;
 
 
 // window.onload = onReady;
@@ -48,44 +48,30 @@ TetrisPlayer = function(index, game){
 
 // var tempPiece = getRandomPiece();
 
-var setEventHandlers = function () {
+// var setEventHandlers = function () {
         
-        // Update Tetris Piece
-        socket.on('PieceUpdate', function(data){
-            // console.log('Tetris Position Update');
-            curPiece = data;
-        })
+//         // Update Tetris Piece
+//         socket.on('PieceUpdate', function(data){
+//             // console.log('Tetris Position Update');
+//             curPiece = data;
+//         })
 
-        //Update gameData
-        socket.on('DataUpdate', function(data){
-            // console.log('Game Data Update');
-            gameData = data;
-        })
+//         //Update gameData
+//         socket.on('DataUpdate', function(data){
+//             // console.log('Game Data Update');
+//             gameData = data;
+//         })
 
-        socket.on('StartGame', function(data){
-            // console.log('Block Update');
-            playing = data;
-        })
+//         socket.on('StartGame', function(data){
+//             // console.log('Block Update');
+//             playing = data;
+//         })
 
-        socket.on('MakeInvi', function(){
-            // console.log('Block Update');
-            blockInvis = 1;
-        })
-
-        socket.on('BreakoutLose', function(){
-            console.log('BreakoutLose');
-            WinImg.style.display = 'inline-block';
-            isGameOver = true;
-            setTimeout(function() {
-
-                // location.reload();
-                // BreakoutRun.create();
-                delete BreakoutRun;
-                BreakoutRun();
-                WinImg.style.display = 'none';
-            }, 4000);
-        })
-}
+//         socket.on('MakeInvi', function(){
+//             // console.log('Block Update');
+//             blockInvis = 1;
+//         });
+// }
 
 function onReady()
 {
@@ -108,8 +94,8 @@ function onReady()
 function getInput(e)
 {
 	if (myID == 1) {
-		curPiece = player.curPiece;
-		isGameOver = player.isGameOver;
+		// curPiece = player.curPiece;
+		// isGameOver = player.isGameOver;
 		//blockInvis = player.blockInvis;
 		//blockRotate = player.blockRotate;
 		if(!e) { var e = window.event; }
@@ -184,8 +170,8 @@ function onImagesLoaded(e)
 
 function initGame()
 {
-	player = new TetrisPlayer (12,0)
-	curPiece = player.curPiece;
+	// player = new TetrisPlayer (12,0)
+	// curPiece = player.curPiece;
 	
 	var r, c;
 	curLines = 0;
@@ -219,7 +205,7 @@ function initGame()
 		}
 	}
 	
-	player.curPiece = getRandomPiece();
+	curPiece = getRandomPiece();
 	
 	lineSpan.innerHTML = curLines.toString();
 	
@@ -229,7 +215,9 @@ function initGame()
 	window.requestAnimationFrame = requestAnimFrame;
 	// gameData = player.gameData;
 
-	setEventHandlers();
+	// if (myID == 0){
+	// 	setEventHandlers();
+	// }
 	
 	requestAnimationFrame(update);
 
@@ -240,27 +228,55 @@ function update()
 {
 	if (myID == 1 && playing == true){
 		curTime = new Date().getTime();
-		curPiece = player.curPiece;
+		// curPiece = player.curPiece;
 		// isGameOver = player.isGameOver;
-		if(curTime - prevTime > 100)
-		{
-			//update the game piece
-			//Piece is falling down so we add one to y position, if it hit 
-			//something, then we copy the data into the game board and then get a new piece
-			if( checkMove(curPiece.gridx, curPiece.gridy + 1, curPiece.curState) )
+		if(speedIncrease == 0){
+			if(curTime - prevTime > 500)
 			{
-				curPiece.gridy += 1;//check move will check if current piece can move down one
+				//update the game piece
+				//Piece is falling down so we add one to y position, if it hit 
+				//something, then we copy the data into the game board and then get a new piece
+				if( checkMove(curPiece.gridx, curPiece.gridy + 1, curPiece.curState) )
+				{
+					curPiece.gridy += 1;//check move will check if current piece can move down one
 
+				}
+				else
+				{
+
+					blockInvis = 0; // Set counter variable to 0 to make it visible
+					copyData(curPiece);//If it hits the bottom, we copy game data to our game board
+					curPiece = getRandomPiece();
+				}
+				
+				// update time
+				prevTime = curTime;
 			}
-			else
+		}
+		else{
+			if(curTime - prevTime > 100)
 			{
-				blockInvis = 0; // Set counter variable to 0 to make it visible
-				copyData(curPiece);//If it hits the bottom, we copy game data to our game board
-				player.curPiece = getRandomPiece();
+				//update the game piece
+				//Piece is falling down so we add one to y position, if it hit 
+				//something, then we copy the data into the game board and then get a new piece
+				if( checkMove(curPiece.gridx, curPiece.gridy + 1, curPiece.curState) )
+				{
+					curPiece.gridy += 1;//check move will check if current piece can move down one
+
+				}
+				else
+				{
+					if(speedIncrease > 0){
+						speedIncrease = speedIncrease - 1;
+					}
+					blockInvis = 0; // Set counter variable to 0 to make it visible
+					copyData(curPiece);//If it hits the bottom, we copy game data to our game board
+					curPiece = getRandomPiece();
+				}
+				
+				// update time
+				prevTime = curTime;
 			}
-			
-			// update time
-			prevTime = curTime;
 		}
 
 		socket.emit('PieceUpdate', curPiece);
@@ -296,7 +312,7 @@ function copyData(p)
 	var state = p.curState;
 	//Loop through piece in current state and draw into board
 	// gameData = player.gameData;
-	isGameOver = player.isGameOver;
+	// isGameOver = player.isGameOver;
 	
 	for(var r = 0, len = p.states[state].length; r < len; r++)
 	{ // Takes care of rows
@@ -320,16 +336,18 @@ function copyData(p)
 	if(p.gridy < 0)
 	{
 		isGameOver = true;
-		socket.emit('TetrisLose');		
-        LoseImg.style.display = 'inline-block';
-		// ctx.drawImage(gameOverImg, 0, 0, 320, 640, 0, 0, 320, 640);
-		setTimeout(function() {
-			// BreakoutRun.create();
-			delete BreakoutRun;
-			BreakoutRun();
-			LoseImg.style.display = 'none';
-            // location.reload();
-        }, 4000);
+		socket.emit('TetrisLose');
+		// TetrisLose = true;		
+  //       LoseImg.style.display = 'inline-block';
+		// // ctx.drawImage(gameOverImg, 0, 0, 320, 640, 0, 0, 320, 640);
+		// setTimeout(function() {
+		// 	// game.create();
+		// 	// delete BreakoutRun;
+		// 	// BreakoutRun();
+
+		// 	LoseImg.style.display = 'none';
+  //           // location.reload();
+  //       }, 4000);
 	}
 }
 
@@ -453,7 +471,7 @@ function checkMove(xpos, ypos, newState)
 	var result = true;
 	var newx = xpos;
 	var newy = ypos;
-	curPiece = player.curPiece;
+	// curPiece = player.curPiece;
 	// gameData = player.gameData;
 	
 	for(var r = 0, len = curPiece.states[newState].length; r < len; r++)

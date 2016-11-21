@@ -1,7 +1,10 @@
 // window.onload = function(){
-var BreakoutRun = function(){    
+var BreakoutRun = function(){   
+// Game = function() {this._construct();}
+// Game.prototype = {_game,_construct: function(){this._game = new Phaser.Game(/*parameters*/);},}
+ 
     // Initialize phaser engine
-    self.game = new Phaser.Game(320, 640, Phaser.CANVAS, 'breakout', {
+    game = new Phaser.Game(320, 640, Phaser.CANVAS, 'breakout', {
       preload: preload, create: create, update: update
     });
 
@@ -44,60 +47,6 @@ var BreakoutRun = function(){
             },
             padding: 10
         };
-
-    //Checkout Player class
-    BreakoutPlayer = function(index, game, player){
-
-        // this.ball = game.add.sprite(game.world.width*0.5, game.world.height*0.5, 'ball');
-        // this.ball.animations.add('wobble', [0,1,0,2,0,1,0,2,0], 24);
-        // this.ball.anchor.set(0.5);
-        // game.physics.enable(this.ball, Phaser.Physics.ARCADE);
-
-        // this.paddle = game.add.sprite(game.world.width*0.5, game.world.height-5, 'paddle');
-        // this.paddle.anchor.set(0.5,1);
-        // game.physics.enable(this.paddle, Phaser.Physics.ARCADE);
-        // this.paddle.body.immovable = true;;
-        // this.bricks;
-        // this.newBrick;
-        // this.score = 0;
-        // this.lives = 3;
-        // this.playing = false;
-        // this.upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
-        // this.downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
-        // this.leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-        // this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-        // this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    }
-
-    // Update Breakout Player Function
-    BreakoutPlayer.prototype.update = function() {
-        var inputChanged = (
-            this.cursor.left != this.input.left ||
-            this.cursor.right != this.input.right ||
-            this.cursor.up != this.input.up ||
-            this.cursor.down != this.input.down
-            
-        );
-
-        if (inputChanged)
-        {
-            //Handle input change here
-            //send new values to the server     
-            if (this.tank.id == myId)
-            {
-                // send latest valid state to the server
-                this.input.x = this.tank.x;
-                this.input.y = this.tank.y;
-                this.input.angle = this.tank.angle;
-                this.input.rot = this.turret.rotation;
-                
-                
-                eurecaServer.handleKeys(this.input);
-            
-            }
-        }
-
-    }
     
         // Event Handler Function
     var setEventHandlers = function () {
@@ -117,7 +66,7 @@ var BreakoutRun = function(){
         })
 
         // Update Bricks
-        socket.on('BricksUpdate', copyBreak)
+        socket.on('BricksUpdate', copyBrick)
 
         // Start game
         socket.on('StartGame', function(data){
@@ -130,30 +79,98 @@ var BreakoutRun = function(){
             console.log('Add Brick line');
             addBrickLine = 1;
             // addBricks();
+        })
+
+        // Update Tetris Piece
+        socket.on('PieceUpdate', function(data){
+            // console.log('Tetris Position Update');
+            curPiece = data;
+        })
+
+        //Update gameData
+        socket.on('DataUpdate', function(data){
+            // console.log('Game Data Update');
+            gameData = data;
+        })
+
+        socket.on('StartGame', function(data){
+            // console.log('Block Update');
+            playing = data;
+        })
+
+        socket.on('MakeInvi', function(){
+            // console.log('Block Update');
+            blockInvis = 1;
+        })
+
+        socket.on('MakeSpeed', function(){
+            // console.log('Block Update');
+            speedIncrease = speedIncrease + 2;
+        })
+
+        socket.on('NextGame', function(){            
+            playing = false; 
+            if (myID == 1)
+                myID = 0;
+            else if (myID == 0)
+                myID = 1;         
+            // Round2Img.style.display = 'inline-block';
+            // delete blockImg;
+            // delete bgImg; //background image
+            // delete gameOverImg;
+            // delete curPiece;//Hold reference to the current game piece moving around
+            // delete gameData; // 2 Dimensional array that represents the game board
+            // delete imgLoader; // Bulk Image Loader
+            // delete prevTime;
+            // delete curTime;
+            // delete isGameOver;
+            // delete lineSpan; // Reference to span object in <div id = "score"> lines
+            // delete curLines; // The number of lines that the player has
+            // delete TetrisPlayer; // Will be used as an object
+            // delete event;
+            // ball.destroy();
+            // paddle.destroy();
+            // bricks.destroy();
+            playing = false;
+            // create();
+            create();
+            // onReady();
+            setTimeout(function() {                
+                Round2Img.style.display = 'none';
+            }, 3000);
         });
 
-        socket.on('TetrisLose', function(){
-            console.log('Tetris Lose');
-            // gameover.visible = true;
-            playing = false;
-            ball.body.velocity.set(0, 0);           
-            WinImg.style.display = 'inline-block';
-            setTimeout(function() {
-                // location.reload();
-                ball.destroy();
-                paddle.destroy();
-                bricks.destroy();
-                create();
-                WinImg.style.display = 'none';
-            }, 4000);
-            // game.input.onDown.addOnce(function(){
-            //         location.reload();
-            //     }, this);
-        })
+        // socket.on('TetrisLose', function(){
+        //     socket.emit('TetrisLose');
+        //     console.log('Tetris Lose');
+        //     playing = false;          
+        //     WinImg.style.display = 'inline-block';
+        //     ball.destroy();
+        //     paddle.destroy();
+        //     bricks.destroy();
+        //     playing = false;
+        //     setTimeout(function() {
+        //         create();
+        //         WinImg.style.display = 'none';
+        //     }, 3000);
+        // })
+
+        // socket.on('BreakoutLose', function(){
+        //     socket.emit('BreakoutLose');
+        //     console.log('BreakoutLose');
+        //     playing = false;
+        //     WinImg.style.display = 'inline-block';
+        //     isGameOver = true;
+        //     setTimeout(function() {
+        //         create();
+        //         WinImg.style.display = 'none';
+        //     }, 3000);
+        // });
     }
     
     // Loading data for the game
     function preload() {
+        onReady();  // Calling onReady Tetris function
         game.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
         game.scale.pageAlignHorizontally = true;
         game.scale.pageAlignVertically = true;
@@ -168,8 +185,7 @@ var BreakoutRun = function(){
     //Creating game objects
     function create() {        
                        
-        onReady();  // Calling onReady Tetris function
-
+        // onReady();
         console.log('ID is ' + myID);
         if (myID == 0) {    // If the player play breakout
             // Initialize phaser physics engine
@@ -180,7 +196,7 @@ var BreakoutRun = function(){
             console.log('Playing');
 
             // Create new player
-            player = new BreakoutPlayer(myID, game, breakout);
+            // player = new BreakoutPlayer(myID, game, breakout);
 
             // Create ball object and set its attributes
             ball = game.add.sprite(game.world.width*0.5, game.world.height*0.5, 'ball');
@@ -305,6 +321,20 @@ var BreakoutRun = function(){
                 addBrickLine = 0;
             }
         }
+        // else if (myID == 1){
+        //     if (TetrisLose == true){
+        //         TetrisLose == false;
+        //         ball.destroy();
+        //         paddle.destroy();
+        //         bricks.destroy();
+        //         playing = false;
+        //         LoseImg.style.display = 'inline-block';
+        //         setTimeout(function() {
+        //             create();
+        //             LoseImg.style.display = 'none';
+        //         }, 4000);
+        //     }
+        // }
     }
 
     function startGame() {
@@ -342,7 +372,7 @@ var BreakoutRun = function(){
         }
     }
 
-    function copyBreak(brickdata){
+    function copyBrick(brickdata){
         // delete bricks;
         if(bricks){
             for (var i = bricks.children.length - 1 ; i >= 0; --i) {
@@ -434,6 +464,9 @@ var BreakoutRun = function(){
             }
             
             ++bricksClear;
+            if ((bricksClear % 2) == 0){
+                socket.emit('MakeSpeed');
+            }
             if (bricksClear == 5){
                 bricksClear = 0;
                 socket.emit('MakeInvi');
@@ -462,15 +495,16 @@ var BreakoutRun = function(){
             else {
 				socket.emit('BreakoutLose');
 				// gameover.visible = true;
-                LoseImg.style.display = 'inline-block';
-                setTimeout(function() {
-                    ball.destroy();
-                    paddle.destroy();
-                    bricks.destroy();
-                    create();
-                    LoseImg.style.display = 'none';
-                    // location.reload();
-                }, 4000);
+                // LoseImg.style.display = 'inline-block';                
+                // ball.destroy();
+                // paddle.destroy();
+                // bricks.destroy();
+                // setTimeout(function() {
+                //     playing = false;
+                //     create();
+                //     LoseImg.style.display = 'none';
+                //     // location.reload();
+                // }, 4000);
 				// game.input.onDown.addOnce(function(){
 				// 	location.reload();
 				// }, this);
