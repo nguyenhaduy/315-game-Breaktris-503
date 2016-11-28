@@ -7,7 +7,7 @@ app.get('/',function(req, res) {
 });
 app.use('/client',express.static(__dirname + '/client'));
 
-serv.listen(12554);
+serv.listen(12555);
 console.log("Server started.");
 
 var SOCKET_LIST = {};
@@ -110,6 +110,7 @@ Player.onConnect = function(socket){
             if (player.room === undefined || player.opponent === undefined){}
             else{
                 if(player.room.playable){
+                    player.room.NumberOfGames += 1;
                     if (SOCKET_LIST[player.opponent.id])
                         SOCKET_LIST[player.opponent.id].emit('StartGame', data);
                 }
@@ -145,12 +146,12 @@ Player.onConnect = function(socket){
             else{
                 if(player.room.playable){
                     // player.room.playable = false;
-                    // if (SOCKET_LIST[player.id])
-                    //     SOCKET_LIST[player.id].emit('NextGame');
-                    // if (SOCKET_LIST[player.opponent.id])
-                    //     SOCKET_LIST[player.opponent.id].emit('NextGame');
+                    if (SOCKET_LIST[player.id])
+                        SOCKET_LIST[player.id].emit('NextGame');
                     if (SOCKET_LIST[player.opponent.id])
-                        SOCKET_LIST[player.opponent.id].emit('BreakoutLose');
+                        SOCKET_LIST[player.opponent.id].emit('NextGame');
+                    // if (SOCKET_LIST[player.opponent.id])
+                    //     SOCKET_LIST[player.opponent.id].emit('BreakoutLose');
                 }
             }
         });
@@ -189,27 +190,53 @@ Player.onConnect = function(socket){
             if (player.room === undefined || player.opponent === undefined){}
             else{
                 if(player.room.playable){
-                    console.log('Add Brick Line.')
+                    console.log('Add Brick Line.');
                     if (SOCKET_LIST[player.opponent.id])
                         SOCKET_LIST[player.opponent.id].emit('AddBrickline');
                 }
             }
         });
         
-        socket.on('TetrisLose',function(){
+        socket.on('Lose',function(){
             console.log('Tetris Player Lose. Breakout Player Win');
             player.opponent.numberofwin += 1;
-            if (player.room === undefined || player.opponent === undefined){}
-            else{
-                if(player.room.playable){
-                    // player.room.playable = false;
-                    // if (SOCKET_LIST[player.id])
-                    //     SOCKET_LIST[player.id].emit('NextGame');
-                    // if (SOCKET_LIST[player.opponent.id])
-                    //     SOCKET_LIST[player.opponent.id].emit('NextGame');
-                    if (SOCKET_LIST[player.opponent.id])
-                        SOCKET_LIST[player.opponent.id].emit('TetrisLose');
+            if (player.room.NumberOfGames < 2) {
+                if (player.room === undefined || player.opponent === undefined){}
+                else{
+                    if(player.room.playable){
+                        // player.room.playable = false;
+                        if (SOCKET_LIST[player.id])
+                            SOCKET_LIST[player.id].emit('NextGame');
+                        if (SOCKET_LIST[player.opponent.id])
+                            SOCKET_LIST[player.opponent.id].emit('NextGame');
+                        // if (SOCKET_LIST[player.opponent.id])
+                        //     SOCKET_LIST[player.opponent.id].emit('TetrisLose');
+                    }
                 }
+            }
+            else {
+                if (player.opponent.numberofwin >= 2){
+                    if (player.room === undefined || player.opponent === undefined){}
+                    else{
+                        if(player.room.playable){
+                            player.room.playable = false;
+                            if (SOCKET_LIST[player.id])
+                                SOCKET_LIST[player.id].emit('YouLose');
+                            if (SOCKET_LIST[player.opponent.id])
+                                SOCKET_LIST[player.opponent.id].emit('YouWin');
+                            // if (SOCKET_LIST[player.opponent.id])
+                            //     SOCKET_LIST[player.opponent.id].emit('TetrisLose');
+                        }
+                    }
+                } else {
+                    player.room.playable = false;
+                    if (SOCKET_LIST[player.id])
+                        SOCKET_LIST[player.id].emit('YouDraw');
+                    if (SOCKET_LIST[player.opponent.id])
+                        SOCKET_LIST[player.opponent.id].emit('YouDraw');
+                    }
+                
+                
             }
         });
 

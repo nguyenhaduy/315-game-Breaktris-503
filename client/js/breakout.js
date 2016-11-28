@@ -25,7 +25,6 @@ var BreakoutRun = function(){
     var leftKey;
     var rightKey;
     var spaceKey;
-    var BreakoutPlayer;
 	var gameover;
 
     var IntervalLoop;
@@ -106,17 +105,25 @@ var BreakoutRun = function(){
         })
 
         socket.on('NextGame', function(){  
-            console.log('Next Game');          
+            console.log('Next Game');
+            clearInterval(IntervalLoop);         
             playing = false;
             isGameOver = false; 
-            if (myID == 1)
+            if (myID == 1){
                 myID = 0;
-            else if (myID == 0)
+            }
+            else if (myID == 0){
                 myID = 1;
-            Round2Img.style.display = 'inline-block';
+                
+            }
+
+            // Round2Img.style.display = 'inline-block';
+
             ball.destroy();
             paddle.destroy();
-            bricks.destroy();
+            for (var i = bricks.children.length - 1 ; i >= 0; --i) {
+                bricks.children[i].destroy();
+            }
 
             // delete ball;   // Ball object
             // delete paddle; // Paddle object
@@ -134,42 +141,61 @@ var BreakoutRun = function(){
             delete leftKey;
             delete rightKey;
             delete spaceKey;
-            delete BreakoutPlayer;
             delete gameover;
+
+            delete curPiece;//Hold reference to the current game piece moving around
+            delete gameData; // 2 Dimensional array that represents the game board
+            delete lineSpan; // Reference to span object in <div id = "score"> lines
+            delete curLines; // The number of lines that the player has
+            delete event;
+            speedIncrease = 0;
+            
 
             preload();
             create();
             setTimeout(function() {                
                 Round2Img.style.display = 'none';
-            }, 3000);
+            }, 4000);
         });
 
-        socket.on('TetrisLose', function(){
-            console.log('Tetris Lose');
+        socket.on('YouWin', function(){
+            console.log('You Win');
             playing = false;
             isGameOver = true;          
             WinImg.style.display = 'inline-block';
             setTimeout(function() {
                 // WinImg.style.display = 'none';
                 location.reload();
-            }, 3000);
+            }, 4000);
         })
 
-        socket.on('BreakoutLose', function(){
-            console.log('BreakoutLose');
+        socket.on('YouLose', function(){
+            console.log('You Lose');
             playing = false;
             isGameOver = true;
-            WinImg.style.display = 'inline-block';            
+            LoseImg.style.display = 'inline-block';            
             setTimeout(function() {
                 // WinImg.style.display = 'none';
                 location.reload();
-            }, 3000);
+            }, 4000);
+        });
+
+        socket.on('YouDraw', function(){
+            console.log('You Draw');
+            playing = false;
+            isGameOver = true;
+            DrawImg.style.display = 'inline-block';            
+            setTimeout(function() {
+                // WinImg.style.display = 'none';
+                location.reload();
+            }, 4000);
         });
     }
     
     // Loading data for the game
     function preload() {
-        // onReady();  // Calling onReady Tetris function
+        delete gameData;
+        onReady();  // Calling onReady Tetris function
         game.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
         game.scale.pageAlignHorizontally = true;
         game.scale.pageAlignVertically = true;
@@ -184,7 +210,7 @@ var BreakoutRun = function(){
     //Creating game objects
     function create() {        
                        
-        onReady();
+        // onReady();
         console.log('ID is ' + myID);
         if (myID == 0) {    // If the player play breakout
             // Initialize phaser physics engine
@@ -211,10 +237,9 @@ var BreakoutRun = function(){
             paddle = game.add.sprite(game.world.width*0.5, game.world.height-5, 'paddle');
             paddle.anchor.set(0.5,1);
             game.physics.enable(paddle, Phaser.Physics.ARCADE);
-            paddle.body.immovable = true;;
-            // paddle = player.paddle;
+            paddle.body.immovable = true;
 
-            initBrick();
+            // initBrick();
 
             textStyle = { font: '18px Arial', fill: '#0095DD' };
             scoreText = game.add.text(5, 5, 'Points: 0', textStyle);
@@ -241,14 +266,13 @@ var BreakoutRun = function(){
         }
         else if(myID ==1){  // If the player play tetris
             console.log('Watching');
+            initBrick();
             ball = game.add.sprite(game.world.width*0.5, game.world.height*0.5, 'ball');
             ball.animations.add('wobble', [0,1,0,2,0,1,0,2,0], 24);
             ball.anchor.set(0.5);
 
             paddle = game.add.sprite(game.world.width*0.5, game.world.height-5, 'paddle');
-            paddle.anchor.set(0.5,1);
-
-            initBrick();
+            paddle.anchor.set(0.5,1);            
 
             textStyle = { font: '18px Arial', fill: '#0095DD' };
             scoreText = game.add.text(5, 5, 'Points: 0', textStyle);
@@ -307,8 +331,8 @@ var BreakoutRun = function(){
     function startGame() {
         if (myID == 0){
             startButton.destroy();
-            // initBrick();
-            ball.body.velocity.set(0, 150);        
+            initBrick();
+            ball.body.velocity.set(0, 400);        
             // ball.body.gravity.y = 100;
             playing = true;
             socket.emit('StartGame', playing);
@@ -482,17 +506,20 @@ var BreakoutRun = function(){
             }
             else {
                 playing = false;
-                clearInterval(IntervalLoop);
-				socket.emit('BreakoutLose');
+                // clearInterval(IntervalLoop);
+				socket.emit('Lose');
+                ball.destroy();
+                paddle.destroy();
+                bricks.destroy();
                 
-                LoseImg.style.display = 'inline-block';                
+                // LoseImg.style.display = 'inline-block';                
                 // ball.destroy();
                 // paddle.destroy();
                 // bricks.destroy();
-                setTimeout(function() {
-                    // LoseImg.style.display = 'none';
-                    location.reload();
-                }, 3000);
+                // setTimeout(function() {
+                //     // LoseImg.style.display = 'none';
+                //     location.reload();
+                // }, 3000);
             }
         }
         else if (myID == 1){

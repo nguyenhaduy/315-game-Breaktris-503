@@ -8,7 +8,8 @@
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
     <script>
     	var myID;
-        var playing = false;
+        var playing = false;        
+        // var isGameOver = false;
         var blockRotate = 0;
         var blockInvis = 0;
         var addBrickLine = 0;
@@ -25,6 +26,7 @@
         var MainScreen;
         var JoinRoomBox;
         var TetrisLose = false;
+
         // var Game;
     	socket = io();
 
@@ -101,11 +103,13 @@
 
         <img id="WinImg" src="client/img/WinGame.jpg" align="top" style="display:none;"></img>
         <img id="LoseImg" src="client/img/LoseGame.jpg" align="top" style="display:none;"></img>
+        <img id="DrawImg" src="client/img/DrawGame.jpg" align="top" style="display:none;"></img>
         <img id="Round2Img" src="client/img/Round2.jpg" align="top" style="display:none;"></img>
 
         <script type="text/javascript">
                 WinImg = document.getElementById('WinImg');
                 LoseImg = document.getElementById('LoseImg');
+                DrawImg = document.getElementById('DrawImg');
                 Round2Img = document.getElementById('Round2Img');
 
                 MainScreen = document.getElementById('MainScreen');

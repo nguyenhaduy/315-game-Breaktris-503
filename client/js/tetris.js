@@ -16,37 +16,12 @@ var curTime;
 var isGameOver;
 var lineSpan; // Reference to span object in <div id = "score"> lines
 var curLines; // The number of lines that the player has
-var TetrisPlayer; // Will be used as an object
 var event;
 var speedIncrease = 0;
 
 
 // window.onload = onReady;
 
-
-TetrisPlayer = function(index, game){
-
-	/*this.input =  {
-		left:false,
-		right:false,
-		up:false,
-		down:false
-	}*/
-
-	this.canvas = canvas;
-	this.ctx = ctx;
-	this.blockRotate = blockRotate;
-	this.blockInvis = blockInvis;
-	this.imgLoader = imgLoader;
-	imgLoader.addImage("client/img/blocks.png", "blocks");
-	imgLoader.addImage("client/img/bg.png", "bg");
-	imgLoader.addImage("client/img/over.png", "gameover");
-	this.curPiece = getRandomPiece();
-	this.gameData;
-	this.isGameOver = false;
-}
-
-// var tempPiece = getRandomPiece();
 
 // var setEventHandlers = function () {
         
@@ -85,8 +60,8 @@ function onReady()
 	//ctx = canvas.getContext('2d');
 	lineSpan = document.getElementById('lines');
 	
-	/*prevTime = curTime = player.curTime;*/
 	prevTime = curTime = 0;
+	delete gameData;
 	
 	document.onkeydown = getInput;
 }
@@ -94,12 +69,7 @@ function onReady()
 function getInput(e)
 {
 	if (myID == 1) {
-		// curPiece = player.curPiece;
-		// isGameOver = player.isGameOver;
-		//blockInvis = player.blockInvis;
-		//blockRotate = player.blockRotate;
 		if(!e) { var e = window.event; }
-		/*player.event = e;*/
 
 		e.preventDefault();
 		
@@ -158,27 +128,22 @@ function getInput(e)
 
 function onImagesLoaded(e)
 {
-
-	/*blockImg = player.blockImg;
-	bgImg = player.bgImg;
-	gameOverImg = player.gameOverImg;*/
 	blockImg = imgLoader.getImageAtIndex(0);
 	bgImg = imgLoader.getImageAtIndex(1);
 	gameOverImg = imgLoader.getImageAtIndex(2);
+	delete gameData;
 	initGame();
 }
 
 function initGame()
-{
-	// player = new TetrisPlayer (12,0)
-	// curPiece = player.curPiece;
-	
+{	
 	var r, c;
 	curLines = 0;
-	// isGameOver = player.isGameOver;
 	isGameOver = false;
 
 	ctx.drawImage(bgImg, 0, 0, 320, 640, 0, 0, 320, 640);
+
+	delete gameData;
 	
 	if(gameData == undefined) // This will loop through the game data array and set everything to zero 
 		//if the game doesn't exist
@@ -213,11 +178,6 @@ function initGame()
 							window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 							
 	window.requestAnimationFrame = requestAnimFrame;
-	// gameData = player.gameData;
-
-	// if (myID == 0){
-	// 	setEventHandlers();
-	// }
 	
 	requestAnimationFrame(update);
 
@@ -228,10 +188,8 @@ function update()
 {
 	if (myID == 1 && playing == true){
 		curTime = new Date().getTime();
-		// curPiece = player.curPiece;
-		// isGameOver = player.isGameOver;
 		if(speedIncrease == 0){
-			if(curTime - prevTime > 500)
+			if(curTime - prevTime > 100)
 			{
 				//update the game piece
 				//Piece is falling down so we add one to y position, if it hit 
@@ -254,7 +212,7 @@ function update()
 			}
 		}
 		else{
-			if(curTime - prevTime > 100)
+			if(curTime - prevTime > 50)
 			{
 				//update the game piece
 				//Piece is falling down so we add one to y position, if it hit 
@@ -289,20 +247,14 @@ function update()
 		//points of the source image. Last four is where you place on the canvas	
 
 	}
-	else if(myID == 0){
-		// ctx.clearRect(0, 0, 320, 640);
+	else if(myID == 0 && playing == true){
+		ctx.clearRect(0, 0, 320, 640);
 		drawBoard();
 		drawPiece(curPiece);
-		// requestAnimationFrame(update);
 	}
 	if(isGameOver == false) {
 			requestAnimationFrame(update);
 		}
-	else if (isGameOver == true) {
-		// socket.emit('TetrisLose');		
-        // LoseImg.style.display = 'inline-block';
-		// ctx.drawImage(gameOverImg, 0, 0, 320, 640, 0, 0, 320, 640);
-	}
 }
 
 function copyData(p)
@@ -311,8 +263,6 @@ function copyData(p)
 	var ypos = p.gridy;
 	var state = p.curState;
 	//Loop through piece in current state and draw into board
-	// gameData = player.gameData;
-	// isGameOver = player.isGameOver;
 	
 	for(var r = 0, len = p.states[state].length; r < len; r++)
 	{ // Takes care of rows
@@ -336,14 +286,16 @@ function copyData(p)
 	if(p.gridy < 0)
 	{
 		isGameOver = true;
-		socket.emit('TetrisLose');
+		delete gameData;
+		socket.emit('DataUpdate', gameData);
+		socket.emit('Lose');
 		// TetrisLose = true;		
-        LoseImg.style.display = 'inline-block';
+        // LoseImg.style.display = 'inline-block';
 		// // ctx.drawImage(gameOverImg, 0, 0, 320, 640, 0, 0, 320, 640);
-		setTimeout(function() {
-			// LoseImg.style.display = 'none';
-            location.reload();
-        }, 3000);
+		// setTimeout(function() {
+		// 	// LoseImg.style.display = 'none';
+  //           location.reload();
+  //       }, 3000);
 	}
 }
 
@@ -353,7 +305,6 @@ function checkLines()
 	var fullRow = true;
 	var r = ROWS - 1;
 	var c = COLS - 1;
-	// gameData = player.gameData;
 	//Loop backwards between the rows and the columns
 	while(r >= 0)
 	{
@@ -396,7 +347,6 @@ function zeroRow(row) // Copying the data from the row above down one
 {
 	var r = row;
 	var c = 0;
-	// gameData = player.gameData;
 	
 	while(r >= 0)
 	{
@@ -417,7 +367,6 @@ function zeroRow(row) // Copying the data from the row above down one
 
 function drawBoard()
 {
-	// gameData = player.gameData;
 	ctx.drawImage(bgImg, 0, 0, 320, 640, 0, 0, 320, 640);
 	//Draw the individual cells
 	for(var r = 0; r < ROWS; r++)
@@ -467,8 +416,6 @@ function checkMove(xpos, ypos, newState)
 	var result = true;
 	var newx = xpos;
 	var newy = ypos;
-	// curPiece = player.curPiece;
-	// gameData = player.gameData;
 	
 	for(var r = 0, len = curPiece.states[newState].length; r < len; r++)
 	{ // Check to see if it is in bounds that it isn't too far to the right or left

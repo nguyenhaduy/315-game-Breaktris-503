@@ -71,6 +71,16 @@ input[type="text"]
 	margin:0 auto;
 }
 
+#DrawImg
+{
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:700px;
+	height:700px;
+	margin:0 auto;
+}
+
 #Round2Img
 {
 	position:absolute;
