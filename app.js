@@ -139,23 +139,6 @@ Player.onConnect = function(socket){
             }
         });
         
-        socket.on('BreakoutLose',function(){
-            console.log('Breakout Player Lose. Tetris Player Win.');
-            player.opponent.numberofwin += 1;
-            if (player.room === undefined || player.opponent === undefined){}
-            else{
-                if(player.room.playable){
-                    // player.room.playable = false;
-                    if (SOCKET_LIST[player.id])
-                        SOCKET_LIST[player.id].emit('NextGame');
-                    if (SOCKET_LIST[player.opponent.id])
-                        SOCKET_LIST[player.opponent.id].emit('NextGame');
-                    // if (SOCKET_LIST[player.opponent.id])
-                    //     SOCKET_LIST[player.opponent.id].emit('BreakoutLose');
-                }
-            }
-        });
-
         socket.on('PieceUpdate',function(data){
             if (player.room === undefined || player.opponent === undefined){}
             else{
@@ -197,7 +180,7 @@ Player.onConnect = function(socket){
             }
         });
         
-        socket.on('Lose',function(){
+        socket.on('LoseRound',function(){
             console.log('Tetris Player Lose. Breakout Player Win');
             player.opponent.numberofwin += 1;
             if (player.room.NumberOfGames < 2) {
@@ -207,8 +190,10 @@ Player.onConnect = function(socket){
                         // player.room.playable = false;
                         if (SOCKET_LIST[player.id])
                             SOCKET_LIST[player.id].emit('NextGame');
-                        if (SOCKET_LIST[player.opponent.id])
+                        if (SOCKET_LIST[player.opponent.id]){
+                            SOCKET_LIST[player.opponent.id].emit('WinRound');
                             SOCKET_LIST[player.opponent.id].emit('NextGame');
+                        }
                         // if (SOCKET_LIST[player.opponent.id])
                         //     SOCKET_LIST[player.opponent.id].emit('TetrisLose');
                     }

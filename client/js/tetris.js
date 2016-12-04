@@ -19,35 +19,6 @@ var curLines; // The number of lines that the player has
 var event;
 var speedIncrease = 0;
 
-
-// window.onload = onReady;
-
-
-// var setEventHandlers = function () {
-        
-//         // Update Tetris Piece
-//         socket.on('PieceUpdate', function(data){
-//             // console.log('Tetris Position Update');
-//             curPiece = data;
-//         })
-
-//         //Update gameData
-//         socket.on('DataUpdate', function(data){
-//             // console.log('Game Data Update');
-//             gameData = data;
-//         })
-
-//         socket.on('StartGame', function(data){
-//             // console.log('Block Update');
-//             playing = data;
-//         })
-
-//         socket.on('MakeInvi', function(){
-//             // console.log('Block Update');
-//             blockInvis = 1;
-//         });
-// }
-
 function onReady()
 {
 	imgLoader = new BulkImageLoader();
@@ -57,7 +28,6 @@ function onReady()
 	imgLoader.onReadyCallback = onImagesLoaded;
 	imgLoader.loadImages();
 
-	//ctx = canvas.getContext('2d');
 	lineSpan = document.getElementById('lines');
 	
 	prevTime = curTime = 0;
@@ -189,7 +159,7 @@ function update()
 	if (myID == 1 && playing == true){
 		curTime = new Date().getTime();
 		if(speedIncrease == 0){
-			if(curTime - prevTime > 100)
+			if(curTime - prevTime > 150)
 			{
 				//update the game piece
 				//Piece is falling down so we add one to y position, if it hit 
@@ -288,7 +258,7 @@ function copyData(p)
 		isGameOver = true;
 		delete gameData;
 		socket.emit('DataUpdate', gameData);
-		socket.emit('Lose');
+		socket.emit('LoseRound');
 		// TetrisLose = true;		
         // LoseImg.style.display = 'inline-block';
 		// // ctx.drawImage(gameOverImg, 0, 0, 320, 640, 0, 0, 320, 640);

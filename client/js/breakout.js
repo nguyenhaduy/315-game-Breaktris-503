@@ -19,7 +19,6 @@ var BreakoutRun = function(){
     var lifeLostText;
     var startButton;
     var key = [];
-    var cursors;
     var upKey;
     var downKey;
     var leftKey;
@@ -49,16 +48,20 @@ var BreakoutRun = function(){
 
         // Update Ball
         socket.on('BallUpdate', function(data){
-            // console.log('Ball Position Update');
-            ball.x = data.x;
-            ball.y = data.y;
+            if (myID == 1){
+                // console.log('Ball Position Update');
+                ball.x = data.x;
+                ball.y = data.y;
+            }
         })
 
         // Update Paddle
         socket.on('PaddleUpdate', function(data){
-            // console.log('Paddle Position Update');
-            paddle.x = data.x;
-            paddle.y = data.y;
+            if (myID == 1) {
+                // console.log('Paddle Position Update');
+                paddle.x = data.x;
+                paddle.y = data.y;
+            }
         })
 
         // Update Bricks
@@ -66,27 +69,35 @@ var BreakoutRun = function(){
 
         // Start game
         socket.on('StartGame', function(data){
-            // console.log('Block Update');
-            playing = data;
+            if (myID == 1){
+                // console.log('Block Update');
+                playing = data;
+            }
         })
 
         // Add 1 more breakline
         socket.on('AddBrickline', function(){
-            console.log('Add Brick line');
-            addBrickLine = 1;
-            // addBricks();
+            if (myID == 1){
+                console.log('Add Brick line');
+                addBrickLine = 1;
+                // addBricks();
+            }
         })
 
         // Update Tetris Piece
         socket.on('PieceUpdate', function(data){
-            // console.log('Tetris Position Update');
-            curPiece = data;
+            if (myID == 0) {
+                // console.log('Tetris Position Update');
+                curPiece = data;
+            }
         })
 
-        //Update gameData
+        // Update Tetris gameData
         socket.on('DataUpdate', function(data){
-            // console.log('Game Data Update');
-            gameData = data;
+            if (myID == 0) {
+                // console.log('Game Data Update');
+                gameData = data;
+            }
         })
 
         socket.on('StartGame', function(data){
@@ -94,14 +105,20 @@ var BreakoutRun = function(){
             playing = data;
         })
 
+        // Make Tetris piece invisible
         socket.on('MakeInvi', function(){
-            // console.log('Block Update');
-            blockInvis = 1;
+            if (myID == 0){
+                // console.log('Block Update');
+                blockInvis = 1;
+            }
         })
 
+        // Temporary increasing Tetris speed
         socket.on('MakeSpeed', function(){
-            // console.log('Block Update');
-            speedIncrease = speedIncrease + 2;
+            if (myID == 0) {
+                // console.log('Block Update');
+                speedIncrease = speedIncrease + 2;
+            }
         })
 
         socket.on('NextGame', function(){  
@@ -117,7 +134,7 @@ var BreakoutRun = function(){
                 
             }
 
-            // Round2Img.style.display = 'inline-block';
+            Round2Img.style.display = 'inline-block';
 
             ball.destroy();
             paddle.destroy();
@@ -125,9 +142,6 @@ var BreakoutRun = function(){
                 bricks.children[i].destroy();
             }
 
-            // delete ball;   // Ball object
-            // delete paddle; // Paddle object
-            // delete bricks; // Bricks objects
             delete newBrick;
             delete scoreText;
             score = 0;
@@ -151,8 +165,11 @@ var BreakoutRun = function(){
             speedIncrease = 0;
             
 
-            preload();
-            create();
+            setTimeout(function() {                
+                preload();
+                create();
+            }, 2000);
+
             setTimeout(function() {                
                 Round2Img.style.display = 'none';
             }, 4000);
@@ -164,7 +181,6 @@ var BreakoutRun = function(){
             isGameOver = true;          
             WinImg.style.display = 'inline-block';
             setTimeout(function() {
-                // WinImg.style.display = 'none';
                 location.reload();
             }, 4000);
         })
@@ -175,7 +191,6 @@ var BreakoutRun = function(){
             isGameOver = true;
             LoseImg.style.display = 'inline-block';            
             setTimeout(function() {
-                // WinImg.style.display = 'none';
                 location.reload();
             }, 4000);
         });
@@ -186,7 +201,6 @@ var BreakoutRun = function(){
             isGameOver = true;
             DrawImg.style.display = 'inline-block';            
             setTimeout(function() {
-                // WinImg.style.display = 'none';
                 location.reload();
             }, 4000);
         });
@@ -219,9 +233,6 @@ var BreakoutRun = function(){
             // Uncheck collision for the bottom screen
             game.physics.arcade.checkCollision.down = false;
             console.log('Playing');
-
-            // Create new player
-            // player = new BreakoutPlayer(myID, game, breakout);
 
             // Create ball object and set its attributes
             ball = game.add.sprite(game.world.width*0.5, game.world.height*0.5, 'ball');
@@ -256,7 +267,6 @@ var BreakoutRun = function(){
 			gameover.anchor.set(0.5);
 			gameover.visible = false;
 
-            // cursors = player.cursors;
             upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
             downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
             leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
@@ -296,11 +306,11 @@ var BreakoutRun = function(){
             if(playing) {
                 if (rightKey.isDown){
                     if (paddle.x < 320)
-                        paddle.x = paddle.x + 5;
+                        paddle.x = paddle.x + 8;
                 }
                 if (leftKey.isDown){
                     if (paddle.x > 0)
-                        paddle.x = paddle.x - 5;
+                        paddle.x = paddle.x - 8;
                 }
                 
                 if (spaceKey.isDown){
@@ -332,7 +342,7 @@ var BreakoutRun = function(){
         if (myID == 0){
             startButton.destroy();
             initBrick();
-            ball.body.velocity.set(0, 400);        
+            ball.body.velocity.set(0, 450);        
             // ball.body.gravity.y = 100;
             playing = true;
             socket.emit('StartGame', playing);
@@ -358,7 +368,6 @@ var BreakoutRun = function(){
             },1000/60);
         }
         else if(myID == 1){
-
         }
     }
 
@@ -380,28 +389,25 @@ var BreakoutRun = function(){
             }
         }
         else if (myID == 1){
-
         }
     }
 
     function copyBrick(brickdata){
-        // delete bricks;
-        if(bricks){
-            for (var i = bricks.children.length - 1 ; i >= 0; --i) {
-                bricks.children[i].destroy();
+        if (myID == 1) {
+            if(bricks){
+                for (var i = bricks.children.length - 1 ; i >= 0; --i) {
+                    bricks.children[i].destroy();
+                }
             }
-            // bricks.destroy();
+            bricks = game.add.group();
+            for (var i = 0; i < brickdata.length; i++) {
+                var brickX = brickdata[i].x;
+                var brickY = brickdata[i].y;
+                newBrick = game.add.sprite(brickX, brickY, 'brick');
+                newBrick.anchor.set(0.5);
+                bricks.add(newBrick);
+            }
         }
-        bricks = game.add.group();
-        for (var i = 0; i < brickdata.length; i++) {
-            var brickX = brickdata[i].x;
-            var brickY = brickdata[i].y;
-            newBrick = game.add.sprite(brickX, brickY, 'brick');
-            newBrick.anchor.set(0.5);
-            // newbrick.visible = true;
-            bricks.add(newBrick);
-        }
-
     }
 
     function addBricks(){
@@ -442,7 +448,7 @@ var BreakoutRun = function(){
             {
                 //  Ball is perfectly in the middle
                 //  Add a little random X to stop it bouncing straight up!
-                ball.body.velocity.x = 2 + Math.random() * 8;
+                ball.body.velocity.x = 2 + Math.random() * 15;
             }
         }
         else if (myID ==1){
@@ -481,7 +487,7 @@ var BreakoutRun = function(){
             }
             if (bricksClear == 5){
                 bricksClear = 0;
-                socket.emit('MakeInvi');
+                // socket.emit('MakeInvi');
             }
         }
         else if (myID == 1){
@@ -506,20 +512,13 @@ var BreakoutRun = function(){
             }
             else {
                 playing = false;
-                // clearInterval(IntervalLoop);
-				socket.emit('Lose');
+                clearInterval(IntervalLoop);                
                 ball.destroy();
                 paddle.destroy();
                 bricks.destroy();
-                
-                // LoseImg.style.display = 'inline-block';                
-                // ball.destroy();
-                // paddle.destroy();
-                // bricks.destroy();
-                // setTimeout(function() {
-                //     // LoseImg.style.display = 'none';
-                //     location.reload();
-                // }, 3000);
+                delete gameData;
+				socket.emit('Lose');
+
             }
         }
         else if (myID == 1){
