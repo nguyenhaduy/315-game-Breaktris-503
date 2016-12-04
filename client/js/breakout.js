@@ -517,7 +517,7 @@ var BreakoutRun = function(){
                 paddle.destroy();
                 bricks.destroy();
                 delete gameData;
-				socket.emit('Lose');
+				socket.emit('LoseRound');
 
             }
         }

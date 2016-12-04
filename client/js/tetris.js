@@ -159,7 +159,7 @@ function update()
 	if (myID == 1 && playing == true){
 		curTime = new Date().getTime();
 		if(speedIncrease == 0){
-			if(curTime - prevTime > 150)
+			if(curTime - prevTime > 200)
 			{
 				//update the game piece
 				//Piece is falling down so we add one to y position, if it hit 
@@ -182,7 +182,7 @@ function update()
 			}
 		}
 		else{
-			if(curTime - prevTime > 50)
+			if(curTime - prevTime > 100)
 			{
 				//update the game piece
 				//Piece is falling down so we add one to y position, if it hit 
