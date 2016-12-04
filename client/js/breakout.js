@@ -77,7 +77,7 @@ var BreakoutRun = function(){
 
         // Add 1 more breakline
         socket.on('AddBrickline', function(){
-            if (myID == 1){
+            if (myID == 0){
                 console.log('Add Brick line');
                 addBrickLine = 1;
                 // addBricks();
@@ -107,7 +107,7 @@ var BreakoutRun = function(){
 
         // Make Tetris piece invisible
         socket.on('MakeInvi', function(){
-            if (myID == 0){
+            if (myID == 1){
                 // console.log('Block Update');
                 blockInvis = 1;
             }
@@ -115,7 +115,7 @@ var BreakoutRun = function(){
 
         // Temporary increasing Tetris speed
         socket.on('MakeSpeed', function(){
-            if (myID == 0) {
+            if (myID == 1) {
                 // console.log('Block Update');
                 speedIncrease = speedIncrease + 2;
             }
