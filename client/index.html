@@ -82,21 +82,26 @@
         </div>
 
         
-        
-    	<div id="TetrisBoard" style="display:none;">
-            <canvas id="tetris" width="320" height="640"></canvas>
-            <script type="text/javascript" src="client/js/tetris.js"></script>
-        </div>   
+        <div id="GameBoard" style="display:none;">
 
-        
-        
+            <img id="GameBackground" src="client/img/GameBackground.jpg"></img>
 
-        <div id="BreakoutBoard" style="display:none;">
-            <div id="breakout" width="320" height="640"></div>
-            <script src="client/js/breakout.js" type="text/javascript"></script>
-        </div>
-        <div id="score" style="display:none;">
-            <p>Lines: <span id="lines"></span></p>
+            <button id="QuitButton">Rage Quit</button>
+
+        	<div id="TetrisBoard">
+                <canvas id="tetris" width="320" height="640"></canvas>
+                <script type="text/javascript" src="client/js/tetris.js"></script>
+            </div>            
+
+            <div id="BreakoutBoard">
+                <div id="breakout" width="320" height="640"></div>
+                <script src="client/js/breakout.js" type="text/javascript"></script>
+            </div>
+
+            <div id="score">
+                <p>Lines: <span id="lines"></span></p>
+            </div>
+
         </div>
         
 
@@ -129,8 +134,9 @@
                 JoinRoomBox = document.getElementById("JoinRoomBox");
 
                 TetrisBoard = document.getElementById('TetrisBoard');
+                GameBoard = document.getElementById('GameBoard');
                 BreakoutBoard = document.getElementById('BreakoutBoard');
-                                
+                QuitButton = document.getElementById('QuitButton');                                
 
                 PlayButton.onclick = function (){
                     MainScreen.style.display = 'none';
@@ -157,8 +163,9 @@
                     socket.on('JoinRoom', function(data){
                         if (data == true){              
                             JoinRoomScreen.style.display = 'none';
-                            TetrisBoard.style.display = 'inline-block';
-                            BreakoutBoard.style.display = 'inline-block';
+                            GameBoard.style.display = 'inline-block';
+                            // TetrisBoard.style.display = 'inline-block';
+                            // BreakoutBoard.style.display = 'inline-block';
                             BreakoutRun();
                         }
                         else{
@@ -172,8 +179,9 @@
                     socket.on('CreateRoom', function(data){
                         if (data == true){    
                             CreateRoomScreen.style.display = 'none';
-                            TetrisBoard.style.display = 'inline-block';
-                            BreakoutBoard.style.display = 'inline-block';
+                            GameBoard.style.display = 'inline-block';
+                            // TetrisBoard.style.display = 'inline-block';
+                            // BreakoutBoard.style.display = 'inline-block';
                             BreakoutRun();
                         }
                         else{
@@ -190,6 +198,10 @@
                 BackButton2.onclick = function (){
                     MainScreen.style.display = 'inline-block';
                     JoinRoomScreen.style.display = 'none';
+                }
+
+                QuitButton.onclick = function (){
+                    location.reload();
                 }
             </script>
 
