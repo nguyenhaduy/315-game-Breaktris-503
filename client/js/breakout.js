@@ -46,6 +46,12 @@ var BreakoutRun = function(){
         // Event Handler Function
     var setEventHandlers = function () {
 
+        socket.on('PlayerJoin', function(data){
+            WaitingForm.style.display = 'none';
+            TetrisBoard.style.display = 'inline-block';
+            BreakoutBoard.style.display = 'inline-block';
+        })
+
         // Update Ball
         socket.on('BallUpdate', function(data){
             if (myID == 1){
@@ -209,6 +215,14 @@ var BreakoutRun = function(){
     // Loading data for the game
     function preload() {
         delete gameData;
+        if (myID == 0){
+            TetrisBoard.style.opacity = .7;
+            BreakoutBoard.style.opacity = 1;
+        }
+        else {
+            TetrisBoard.style.opacity = 1;
+            BreakoutBoard.style.opacity = .7;
+        }
         onReady();  // Calling onReady Tetris function
         game.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
         game.scale.pageAlignHorizontally = true;
@@ -254,8 +268,10 @@ var BreakoutRun = function(){
 
             textStyle = { font: '18px Arial', fill: '#0095DD' };
             scoreText = game.add.text(5, 5, 'Points: 0', textStyle);
+            scoreText.visible = false;
             livesText = game.add.text(game.world.width-5, 5, 'Lives: '+lives, textStyle);
             livesText.anchor.set(1,0);
+            livesText.visible = false;
             lifeLostText = game.add.text(game.world.width*0.5, game.world.height*0.5, 'Life lost, click to continue', textStyle);
             lifeLostText.anchor.set(0.5);
             lifeLostText.visible = false;
@@ -286,7 +302,9 @@ var BreakoutRun = function(){
 
             textStyle = { font: '18px Arial', fill: '#0095DD' };
             scoreText = game.add.text(5, 5, 'Points: 0', textStyle);
+            scoreText.visible = false;
             livesText = game.add.text(game.world.width-5, 5, 'Lives: '+lives, textStyle);
+            livesText.visible = false;
             livesText.anchor.set(1,0);
             lifeLostText = game.add.text(game.world.width*0.5, game.world.height*0.5, 'Life lost, click to continue', textStyle);
             lifeLostText.anchor.set(0.5);

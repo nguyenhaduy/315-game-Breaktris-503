@@ -60,31 +60,29 @@
 
         <div id="CreateRoomScreen" style="display:none;">
             <img id="CreateRoomImg" src="client/img/CreateRoomImg.jpg"></img>
-            Room name: <input id="CreateRoomName" type="text"></input><br>
+            <input id="CreateRoomName" type="text"></input><br>
             <button id="CreateButton"><font size="4">Create New Room</font></button>
             <button id="BackButton1"><font size="4">Back</font></button>            
         </div>
 
         <div id="JoinRoomScreen" style="display:none;">
             <img id="JoinRoomImg" src="client/img/JoinRoomImg.jpg"></img>
-            Room name: <input id="JoinRoomName" type="text"></input><br>
-            <select name="drop1" id="JoinRoomBox" size="4" multiple="multiple">
-                <option value="1">item 1</option>
-                <option value="2">item 2</option>
-                <option value="3">item 3</option>
-                <option value="4">item 4</option>
-                <option value="0">All</option>
-
+            <input id="JoinRoomName" type="text"  style="display:none;"></input><br>
+            <select id="RoomSelectBox" multiple="multiple">
             </select>
 
             <button id="JoinRoomButton"><font size="4">Join Room</font></button>
             <button id="BackButton2"><font size="4">Back</font></button>            
         </div>
 
-        
         <div id="GameBoard" style="display:none;">
 
             <img id="GameBackground" src="client/img/GameBackground.jpg"></img>
+
+            <div id="WaitingForm" width="600" height="600" style="display:none;">
+                <p><a>    WAITING FOR OTHER PLAYER    </a></p>
+                <button id="StartButton" style="display:none;">Start Game</button>
+            </div>
 
             <button id="QuitButton">Rage Quit</button>
 
@@ -98,7 +96,7 @@
                 <script src="client/js/breakout.js" type="text/javascript"></script>
             </div>
 
-            <div id="score">
+            <div id="TetrisLines" style="display:none;">
                 <p>Lines: <span id="lines"></span></p>
             </div>
 
@@ -131,12 +129,15 @@
                 JoinRoomButton = document.getElementById('JoinRoomButton');
                 BackButton2 = document.getElementById('BackButton2');
                 JoinRoomName = document.getElementById('JoinRoomName');
-                JoinRoomBox = document.getElementById("JoinRoomBox");
+                RoomSelectBox = document.getElementById("RoomSelectBox");
 
                 TetrisBoard = document.getElementById('TetrisBoard');
                 GameBoard = document.getElementById('GameBoard');
                 BreakoutBoard = document.getElementById('BreakoutBoard');
-                QuitButton = document.getElementById('QuitButton');                                
+                QuitButton = document.getElementById('QuitButton');
+                StartButton = document.getElementById('StartButton');
+                WaitingForm = document.getElementById('WaitingForm');
+                                
 
                 PlayButton.onclick = function (){
                     MainScreen.style.display = 'none';
@@ -151,15 +152,30 @@
 
                 JoinButton.onclick = function (){
                     MainScreen.style.display = 'none';
-                    
+                    JoinRoomScreen.style.display = 'inline-block';
+
+                    socket.emit('RequestRooms');
+                    socket.on('RequestRooms', function(data){
+                        console.log('Fletching Available Room');
+                        while (RoomSelectBox.options.length > 0) {             
+                            RoomSelectBox.remove(0);
+                        }
+                        for(var i in data){
+                            console.log(data[i]);
+                            var objOption = document.createElement("option");
+                            objOption.text = data[i];
+                            objOption.value = data[i];
+                            RoomSelectBox.options.add(objOption);
+                        }                        
+                    })
+                    RoomSelectBox.options.size = "6";
                     // var option = document.createElement("option");
                     // option.text = "Kiwi";
-                    // JoinRoomBox.add(option);
-                    JoinRoomScreen.style.display = 'inline-block';
+                    // JoinRoomBox.add(option);                    
                 }
 
                 JoinRoomButton.onclick = function (){
-                    socket.emit('JoinRoom', JoinRoomName.value);
+                    socket.emit('JoinRoom', RoomSelectBox.options[RoomSelectBox.selectedIndex].value);
                     socket.on('JoinRoom', function(data){
                         if (data == true){              
                             JoinRoomScreen.style.display = 'none';
@@ -180,8 +196,9 @@
                         if (data == true){    
                             CreateRoomScreen.style.display = 'none';
                             GameBoard.style.display = 'inline-block';
-                            // TetrisBoard.style.display = 'inline-block';
-                            // BreakoutBoard.style.display = 'inline-block';
+                            TetrisBoard.style.display = 'none';                
+                            BreakoutBoard.style.display = 'none';
+                            WaitingForm.style.display = 'inline-block';
                             BreakoutRun();
                         }
                         else{

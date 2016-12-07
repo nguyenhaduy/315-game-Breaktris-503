@@ -66,10 +66,18 @@ Player.onConnect = function(socket){
             SOCKET_LIST[player.id].emit('player ID', 1);
             console.log('Player 1 opponent ID : ' + player.opponent.id);
             console.log('Player 2 opponent ID : ' + player.opponent.opponent.id);
+            SOCKET_LIST[player.opponent.id].emit('PlayerJoin');
         }
         socket.emit('JoinRoom', temp2);
     });
     
+    socket.on('RequestRooms',function(){
+        var temp = {};
+        for(var i in ROOM_LIST){
+            temp[i] = ROOM_LIST[i].id;
+        }
+        SOCKET_LIST[player.id].emit('RequestRooms', temp);
+    })
 
         socket.on('BallUpdate',function(data){
             // console.log('Ball position update');
