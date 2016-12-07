@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" href="client/css/style.css" />
     <title>Breaktris HTML5</title>
     <style>* { padding: 0; margin: 0; }</style>
+    <audio><source src="client/music/BackgroundMusic.mp3" type="audio/mpeg" autostart="true"/></audio>
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
     <script>
     	var myID;
@@ -54,8 +55,7 @@
             <button id="PlayButton" style="display:none;">Play Game</button>
             <img id="NewButton" src="client/img/NewButton.png"></img>
             <img id="JoinButton" src="client/img/JoinButton.png"></img>
-            <img id="IntroButton" src="client/img/IntroButton.png"></img>
-            
+            <img id="IntroButton" src="client/img/IntroButton.png"></img> 
         </div>
 
         <div id="CreateRoomScreen" style="display:none;">
@@ -73,6 +73,11 @@
 
             <button id="JoinRoomButton"><font size="4">Join Room</font></button>
             <button id="BackButton2"><font size="4">Back</font></button>            
+        </div>
+
+        <div id="IntroScreen" style="display:none;">
+            <img id="IntroImg" src="client/img/IntroImg.jpeg"></img>
+            <button id="BackButton3"><font size="4">Back</font></button>       
         </div>
 
         <div id="GameBoard" style="display:none;">
@@ -100,6 +105,14 @@
                 <p>Lines: <span id="lines"></span></p>
             </div>
 
+            <div id="TetrisBlinking" style="display:none;">
+                <p>Tetris<span id="lines"></span></p>
+            </div>
+
+            <div id="BreakoutBlinking" style="display:none;">
+                <p>Breakout</p>
+            </div>
+
         </div>
         
 
@@ -118,7 +131,7 @@
                 PlayButton = document.getElementById('PlayButton');
                 NewButton = document.getElementById('NewButton');
                 JoinButton = document.getElementById('JoinButton');
-                IntroButton = document.getElementById('PlayButton');
+                IntroButton = document.getElementById('IntroButton');
 
                 CreateRoomScreen = document.getElementById('CreateRoomScreen');
                 CreateButton = document.getElementById('CreateButton');
@@ -137,6 +150,23 @@
                 QuitButton = document.getElementById('QuitButton');
                 StartButton = document.getElementById('StartButton');
                 WaitingForm = document.getElementById('WaitingForm');
+
+                IntroScreen = document.getElementById('IntroScreen');
+                BackButton3 = document.getElementById('BackButton3');
+
+                socket.on('RequestRooms', function(data){
+                        console.log('Fletching Available Room');
+                        while (RoomSelectBox.options.length > 0) {             
+                            RoomSelectBox.remove(0);
+                        }
+                        for(var i in data){
+                            console.log(data[i]);
+                            var objOption = document.createElement("option");
+                            objOption.text = data[i];
+                            objOption.value = data[i];
+                            RoomSelectBox.options.add(objOption);
+                    }                        
+                })
                                 
 
                 PlayButton.onclick = function (){
@@ -154,24 +184,12 @@
                     MainScreen.style.display = 'none';
                     JoinRoomScreen.style.display = 'inline-block';
 
-                    socket.emit('RequestRooms');
-                    socket.on('RequestRooms', function(data){
-                        console.log('Fletching Available Room');
-                        while (RoomSelectBox.options.length > 0) {             
-                            RoomSelectBox.remove(0);
-                        }
-                        for(var i in data){
-                            console.log(data[i]);
-                            var objOption = document.createElement("option");
-                            objOption.text = data[i];
-                            objOption.value = data[i];
-                            RoomSelectBox.options.add(objOption);
-                        }                        
-                    })
-                    RoomSelectBox.options.size = "6";
-                    // var option = document.createElement("option");
-                    // option.text = "Kiwi";
-                    // JoinRoomBox.add(option);                    
+                    socket.emit('RequestRooms');                  
+                }
+
+                IntroButton.onclick = function (){
+                    MainScreen.style.display = 'none';
+                    IntroScreen.style.display = 'inline-block';             
                 }
 
                 JoinRoomButton.onclick = function (){
@@ -180,8 +198,8 @@
                         if (data == true){              
                             JoinRoomScreen.style.display = 'none';
                             GameBoard.style.display = 'inline-block';
-                            // TetrisBoard.style.display = 'inline-block';
-                            // BreakoutBoard.style.display = 'inline-block';
+                            TetrisBlinking.style.display = 'inline-block';
+                            BreakoutBlinking.style.display = 'inline-block';
                             BreakoutRun();
                         }
                         else{
@@ -215,6 +233,11 @@
                 BackButton2.onclick = function (){
                     MainScreen.style.display = 'inline-block';
                     JoinRoomScreen.style.display = 'none';
+                }
+
+                BackButton3.onclick = function (){
+                    MainScreen.style.display = 'inline-block';
+                    IntroScreen.style.display = 'none';
                 }
 
                 QuitButton.onclick = function (){

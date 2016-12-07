@@ -50,6 +50,8 @@ var BreakoutRun = function(){
             WaitingForm.style.display = 'none';
             TetrisBoard.style.display = 'inline-block';
             BreakoutBoard.style.display = 'inline-block';
+            TetrisBlinking.style.display = 'inline-block';
+            BreakoutBlinking.style.display = 'inline-block';
         })
 
         // Update Ball

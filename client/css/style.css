@@ -36,6 +36,16 @@ input[type="text"]
 	margin:0 auto;
 }
 
+#IntroImg
+{
+	position:absolute;
+	left:0px;
+	top:0px;
+	width:700px;
+	height:700px;
+	margin:0 auto;
+}
+
 #JoinRoomImg
 {
 	position:absolute;
@@ -138,8 +148,6 @@ input[type="text"]
 p:nth-child(1) a {
   color: #fff;
   font-family: Monoton;
-  -webkit-animation: neon1 2s ease-in-out infinite alternate;
-  -moz-animation: neon1 2s ease-in-out infinite alternate;
   animation: neon1 2s ease-in-out infinite alternate;
 }
 
@@ -219,6 +227,35 @@ p:nth-child(1) a {
 #QuitButton:hover{
 	 background: #3cdfdf;
 	 color:white;
+}
+
+#TetrisBlinking
+{
+	position:absolute;
+	left:100px;
+	top:5px;
+	font-size:24px;
+	font-family: Audiowide;
+	color: #BA01FF;
+
+	text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #ff00de, 0 0 70px #ff00de, 0 0 80px #ff00de, 0 0 100px #ff00de, 0 0 150px #ff00de;
+	animation: blinker 2s ease-in-out infinite alternate;
+}
+
+#BreakoutBlinking
+{
+	position:absolute;
+	right:80px;
+	top:5px;
+	font-size:24px;
+	font-family: Audiowide;
+	color: #BA01FF;
+	text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #ff00de, 0 0 70px #ff00de, 0 0 80px #ff00de, 0 0 100px #ff00de, 0 0 150px #ff00de;
+	animation: blinker 2s ease-in-out infinite alternate;
+}
+
+@keyframes blinker {
+  50% { opacity: 0; }
 }
 
 #GameBoard
@@ -530,6 +567,34 @@ p:nth-child(1) a {
 }
 
 #BackButton2:hover{
+	 background: #3cdfdf;
+	 color:white;
+}
+
+#BackButton3
+{
+	position:absolute;
+	left:100px;
+	top:580px;
+	/*background-color:#FFF;	*/
+	width:160px;
+	height:50px;
+	margin:0 auto;
+
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+	-moz-box-shadow: 0px 0px 30px #3cdfdf;
+	-webkit-box-shadow: 0px 0px 30px #3cdfdf;
+	box-shadow: 0px 0px 30px #3cdfdf;
+
+	background-image: -moz-linear-gradient(top, white, #3cdfdf); /* FF3.6 */
+	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, white),color-stop(1, #3cdfdf)); /* Saf4+, Chrome */
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorStr='white', EndColorStr='#3cdfdf'); /* IE6,IE7 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='white', EndColorStr='#3cdfdf')"; /* IE8 */
+}
+
+#BackButton3:hover{
 	 background: #3cdfdf;
 	 color:white;
 }
