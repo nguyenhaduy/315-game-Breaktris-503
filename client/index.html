@@ -5,7 +5,6 @@
     <link rel="stylesheet" type="text/css" href="client/css/style.css" />
     <title>Breaktris HTML5</title>
     <style>* { padding: 0; margin: 0; }</style>
-    <audio><source src="client/music/BackgroundMusic.mp3" type="audio/mpeg" autostart="true"/></audio>
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
     <script>
     	var myID;
@@ -28,6 +27,16 @@
         var JoinRoomBox;
         var TetrisLose = false;
         var WinNumber = 0;
+
+        var MenuMusic = document.createElement("audio");
+        MenuMusic.loop = true;
+        MenuMusic.src = "client/music/BackgroundMusic.mp3";
+        MenuMusic.play();
+
+        var GameMusic = document.createElement("audio");
+        GameMusic.loop = true;
+        GameMusic.src = "client/music/GameMusic.mp3";
+
 
     	socket = io();
 
@@ -200,7 +209,9 @@
                             GameBoard.style.display = 'inline-block';
                             TetrisBlinking.style.display = 'inline-block';
                             BreakoutBlinking.style.display = 'inline-block';
+                            MenuMusic.pause();
                             BreakoutRun();
+                            GameMusic.play();
                         }
                         else{
                             alert('This room is not available!');
@@ -217,7 +228,9 @@
                             TetrisBoard.style.display = 'none';                
                             BreakoutBoard.style.display = 'none';
                             WaitingForm.style.display = 'inline-block';
+                            MenuMusic.pause();
                             BreakoutRun();
+                            GameMusic.play();
                         }
                         else{
                             alert('This room name is already taken!');
